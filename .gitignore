@@ -1,0 +1,13 @@
+﻿# IDE Settings (WebStorm / IntelliJ)
+.idea/
+*.iws
+*.iml
+
+# Operating System Junk Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Optional: Log files
+*.log
