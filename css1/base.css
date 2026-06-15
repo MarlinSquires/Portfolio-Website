@@ -1,0 +1,26 @@
+﻿/* base.css */
+:root {
+    --bg: #1f3151;
+    --panel: #12161e;
+    --panel-alt: #171c26;
+    --border: #232a35;
+    --text: #eef0f2;
+    --muted: #8d96a3;
+    --accent: #ff8a3d;
+    --keyword: #2f86e4;
+    --type: #60ea9b;
+    --function: #ece794;
+    --variable: #89ecec;
+    --comment: #a6ed77;
+    --control: #de9ffa;
+    --accent-soft: rgba(255, 138, 61, 0.12);
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Space Grotesk', sans-serif;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--display);
+}
+/* Any universal header, footer, or link styles go here too */

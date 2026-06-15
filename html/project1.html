@@ -1,0 +1,238 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breda Intake Assignment</title>
+
+    <!-- Required font systems for your index stylesheet rules -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="../css1/base.css">
+    <link href="../css1/project1.css" rel="stylesheet">
+
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <a href="../index.html">← Marlin Squires</a>
+    <div>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#contact">Contact</a>
+    </div>
+</nav>
+
+<!-- Project Canvas Area -->
+<main>
+    <div class="hero">
+        <span class="tag">C++</span>
+        <h1>Cow <span>Abductor</span></h1>
+        <p>A top-down arcade game built using only the simple Tmpl8 library, which
+            handles rendering and tick logic.</p>
+    </div>
+
+    <section>
+        <!-- OVERVIEW-->
+        <div>
+            <h2>Overview</h2>
+            <p>Cow Abductor is an arcade game built in C++ using the Tmpl8 2026 framework, submitted as my intake assignment for BUas CMGT.
+            </p>
+            <div class="image-container">
+                <img src="../assets/CowAbductor.png" alt="Cow Abductor">
+            </div>
+        </div>
+
+        <!-- MY FIRST PROJECT-->
+        <div>
+            <h2>My first C++ project</h2>
+            <p>
+                This project was my first ever exposure to C++ and engine-less gamedev, and the transition
+                from C# and Unity took some time. Worrying about memory management, circular dependencies,
+                and the complete lack of engine tooling made every new system a labour of love, but at the
+                same time the newfound level of control and ownership over my game was gratifying.
+            </p>
+        </div>
+
+        <!-- GAMEOBJECT SYSTEM -->
+        <div>
+            <h2>The GameObject system</h2>
+            <p>Instead of opting for a deep inheritance hierarchy,
+            I drew on my familiarity with Unity to design a composition-based system, where
+            a gameObject's behaviour is defined almost entirely by the components it owns.
+            </p>
+
+            <div class="code-wrapper">
+                <div class="code-header">C++</div>
+<!-- CODE BLOCK - KEEP SHITTY INDENTS -->
+<pre>
+<span class="keyword">class</span> <span class="type">GameObject</span>
+{
+<span class="keyword">public</span>:
+
+    Tmpl8::<span class="type">vec2</span> pos;
+    <span class="keyword">bool</span> debug = <span class="keyword">false</span>;
+
+    <span class="keyword">void</span> <span class="function">Start</span>();
+    <span class="keyword">void</span> <span class="function">Tick</span>();
+
+
+    <span class="keyword">template</span> &lt<span class="keyword">typename</span> <span class="type">T</span>, <span class="keyword">typename</span>... <span class="type">Args</span>>
+    <span class="type">T</span>& <span class="function">AddComponent</span>(<span class="type">Args</span>&&... args)
+    {
+        <span class="keyword">auto</span> <span class="variable">comp</span> = std::<span class="function">make_unique</span>&lt<span class="type">T</span>>(std::<span class="function">forward</span>&lt<span class="type">Args</span>>(args)...);
+        <span class="variable">comp</span>->gameObject = <span class="keyword">this</span>;
+        <span class="type">T</span>& <span class="variable">ref</span> = *<span class="variable">comp</span>;
+        components.<span class="function">push_back</span>(std::<span class="function">move</span>(<span class="variable">comp</span>));
+        <span class="control">return</span> <span class="variable">ref</span>;
+    }
+
+    <span class="keyword">template</span> &lt<span class="keyword">typename</span> <span class="type">T</span>> <span class="type">T</span>* <span class="function">GetComponent</span>()
+    {
+        <span class="control">for</span> (<span class="keyword">const auto</span>& <span class="variable">component</span> : components)
+        {
+            <span class="type">T</span>* <span class="variable">ptr</span> = <span class="keyword">dynamic_cast</span><<span class="type">T</span>*>(<span class="variable">component</span>.<span class="function">get</span>());
+            <span class="control">if</span> (<span class="variable">ptr</span>) <span class="control">return</span> <span class="variable">ptr</span>;
+        }
+        <span class="control">return</span> <span class="keyword">nullptr</span>;
+    }
+
+
+    <span class="keyword">void</span> <span class="function">SetActive</span>(<span class="keyword">bool</span> isActive);
+
+    <span class="function">GameObject</span>(Tmpl8::<span class="type">vec2</span> spawnPos, <span class="keyword">bool</span> debug) : pos(spawnPos), debug(debug){};
+
+
+<span class="keyword">private</span>:
+
+    std::<span class="type">vector</span>&ltstd::<span class="type">unique_ptr</span>&lt<span class="type">Component</span>>> components;
+
+    <span class="keyword">bool</span> active = <span class="keyword">true</span>; <span class="comment">// Whether to run Tick() logic</span>
+
+    <span class="keyword">void</span> <span class="function">DrawOrigin</span>();
+
+};</pre>
+            </div>
+
+            <p>
+            The base <code>GameObject</code> class is barebones, containing only a vector2 position,
+            component-handling logic, and members for lifecycle and debugging.
+            At the core of this is the <code>AddComponent()</code> function,
+            which uses variadic templates to pass any number of <code>Component</code> constructor
+            arguments through a single <code>Args...</code> parameter.
+            </p>
+        </div>
+
+        <!-- SPRITE FACTORY SYSTEM -->
+        <div>
+            <h2>Sprite factory system</h2>
+            <p>
+
+            </p>
+            <div class="code-wrapper">
+                <div class="code-header">C++</div>
+                <pre><span class="keyword">if</span> (overlappingWindows &gt; <span class="number">1</span>)
+                {
+                    Window* topWindow = ownerWindow;
+                    <span class="keyword">auto</span> ownIt = std::find(game-&gt;windows.begin(), game-&gt;windows.end(), ownerWindow);
+
+                    <span class="keyword">for</span> (Window* other : otherWindows)
+                    {
+                        <span class="keyword">auto</span> otherIt = std::find(game-&gt;windows.begin(), game-&gt;windows.end(), other);
+                        <span class="keyword">if</span> (otherIt &gt; ownIt)
+                        {
+                            ownIt = otherIt;
+                            topWindow = other;
+                        }
+                    }
+
+                    <span class="keyword">if</span> (topWindow != ownerWindow)
+                    OnWindowTransfer(topWindow);
+                }</pre>
+            </div>
+        </div>
+
+        <!-- Drag / Window System Section -->
+        <div>
+            <h2>The window system</h2>
+            <p>When the player drags a window, all entities inside it move with it while maintaining their relative positions. Each entity stores a <code>draggingOffset</code> at the moment dragging begins, and its world position is recalculated from the window's current position during the drag. Bringing a window to the front is handled by removing it from the <code>windows</code> vector and pushing it to the back, since draw order is back-to-front.</p>
+
+            <div class="code-wrapper">
+                <div class="code-header">C++</div>
+                <pre><span class="keyword">void</span> Window::UpdateDrag(vec2 mousePos)
+{
+    transform.position = mousePos - draggingOffset;
+    transform.position.x = Clamp(transform.position.x, <span class="number">0.0f</span>, <span class="number">1024</span> - (transform.scale.x + <span class="number">1</span>));
+    transform.position.y = Clamp(transform.position.y, <span class="number">0.0f</span>, <span class="number">768</span>  - (transform.scale.y + <span class="number">1</span>));
+
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; entities.size(); i++)
+        entities[i]-&gt;transform.position = transform.position - entities[i]-&gt;draggingOffset;
+}</pre>
+            </div>
+
+            <p>Enemy separation was handled with a proportional repulsion force based on overlap depth rather than hard collision resolution, which avoids jitter when more than two objects are involved.</p>
+
+            <div class="code-wrapper">
+                <div class="code-header">C++</div>
+                <pre><span class="keyword">float</span> force = mtv.depth / (characterEntities[i]-&gt;collider.radius + characterEntities[j]-&gt;collider.radius);
+characterEntities[i]-&gt;transform.position += mtv.axis * force;
+characterEntities[j]-&gt;transform.position -= mtv.axis * force;</pre>
+            </div>
+        </div>
+
+        <!-- Collision Section -->
+        <div>
+            <h2>The collision system</h2>
+            <p>The collision system is built around SAT (Separating Axis Theorem) and supports polygon vs polygon, polygon vs sphere, and sphere vs sphere. Every overlap test returns a Minimum Translation Vector which is the shortest vector along which overlapping shapes can be separated. This MTV drives both collision resolution and the repulsion system.</p>
+
+            <div class="code-wrapper">
+                <div class="code-header">C++</div>
+                <pre><span class="keyword">bool</span> Collider::CheckOverlap(<span class="keyword">const</span> Collider&amp; other, MTV&amp; outMTV) <span class="keyword">const</span>
+{
+    <span class="keyword">float</span> smallestOverlap = FLT_MAX;
+    vec2 smallestAxis;
+
+    <span class="keyword">for</span> (<span class="keyword">const</span> vec2&amp; localAxis : localNormals)
+    {
+        vec2 axis = transform-&gt;TransformDirection(localAxis);
+        Projection a = ProjectOntoAxis(localVertices, axis, *transform);
+        Projection b = ProjectOntoAxis(other.localVertices, axis, *other.transform);
+
+        <span class="keyword">if</span> (!Overlaps(a, b)) <span class="keyword">return false</span>;
+
+        <span class="keyword">float</span> overlap = std::min(a.max, b.max) - std::max(a.min, b.min);
+        <span class="keyword">if</span> (overlap &lt; smallestOverlap) { smallestAxis = axis; smallestOverlap = overlap; }
+    }
+
+    outMTV.axis  = smallestAxis;
+    outMTV.depth = smallestOverlap;
+
+    <span class="keyword">if</span> ((transform-&gt;position - other.transform-&gt;position).dot(outMTV.axis) &lt; <span class="number">0.0f</span>)
+        outMTV.axis = -outMTV.axis;
+
+    <span class="keyword">return true</span>;
+}</pre>
+            </div>
+            <p>The window border colliders use <code>CheckFullOverlap</code> a variant that checks whether a sphere is completely contained within a polygon rather than just touching it. This ensures entities only transfer windows when fully inside the overlap zone, not just grazing the edge.</p>
+        </div>
+
+        <!-- Reflections Section -->
+        <div>
+            <h2>Reflections</h2>
+            <p>This project pushed me into a lot of unfamiliar C++ territory. forward declarations to break circular includes, constructor initializer lists, virtual function chains across multiple inheritance layers, and pointer ownership. Most of these came up as real problems during development rather than things I planned for upfront, which made solving them feel meaningful.</p>
+            <p>The window transfer mechanic ended up being more emergent than designed. Once the system was working I realized the player could actively use window manipulation as a combat tool, dragging a window to steal enemies, or repositioning windows to funnel bullets. That kind of emergent gameplay from a simple rule set is something I want to keep exploring.</p>
+            <p>The full source code is available on <a href="https://github.com/floryan-bruijn/window_defender" target="_blank">GitHub</a>.</p>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer>© 2026 Marlin Squires. All rights reserved.</footer>
+
+</body>
+</html>

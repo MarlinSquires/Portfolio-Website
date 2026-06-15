@@ -2,9 +2,201 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Marlin Squires</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css1/base.css">
+    <link href="css1/index.css" rel="stylesheet">
 </head>
 <body>
+
+<canvas id="ascii-bg"></canvas>
+
+<header>
+    <nav>
+        <div class="logo">MARLIN<span>.</span>SQUIRES</div>
+        <ul class="nav-links">
+            <li><a href="#about">about</a></li>
+            <li><a href="#skills">skills</a></li>
+            <li><a href="#projects">projects</a></li>
+            <li><a href="#contact">contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+
+    <!-- Hero -->
+    <section class="hero container" id="hero">
+        <span class="eyebrow">Games Programmer</span>
+        <h1>Hi, I'm Marlin<span class="cursor" aria-hidden="true"></span></h1>
+        <p>I design and build gameplay systems with designers in mind.</p>
+        <a class="btn" href="#projects">See my work →</a>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+        <div class="container">
+            <span class="eyebrow">01 — About me</span>
+            <div class="about-grid">
+                <div>
+                    <p>I'm a second-year CMGT student at Hanze Groningen. I have an
+                        affinity for designing code that is accessible, maintainable, and extensible,
+                        and I love seeing games come to life as the systems come online. </p>
+                    <p>Outside of code I follow some artistic pursuits, enjoy
+                        cooking delicious meals, and play basketball, badminton, and go running. </p>
+                </div>
+                <ul class="traits">
+                    <li>⚡ Quick learner</li>
+                    <li>🔍 Meticulous</li>
+                    <li>🤝 Team player</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills">
+        <div class="container">
+            <span class="eyebrow">02 — Skills</span>
+            <div class="skills-grid">
+                <div class="skill">Unity</div>
+                <div class="skill">C#</div>
+                <div class="skill">C++</div>
+                <div class="skill">HTML &amp; CSS</div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <!-- Projects -->
+    <section id="projects">
+        <div class="container">
+            <span class="eyebrow">03 — Projects</span>
+            <div class="projects-grid">
+
+                <a class="project-card" href="html/project1.html" target="_blank" rel="noopener">
+                    <div class="project-tags">C++</div>
+                    <h3>Cow Abductor</h3>
+                    <div class="project-meta">Solo Project · 2026</div>
+                    <p>A simple arcade game built without the use of a game engine.</p>
+                    <span class="project-link">View project →</span>
+                </a>
+
+                <a class="project-card" href="https://florianbruijn.nl/projects/windows-defender/windows-defender.html" target="_blank" rel="noopener">
+                    <div class="project-tags">Unity · C#</div>
+                    <h3>Modular Guns</h3>
+                    <div class="project-meta">Solo Development · 2026</div>
+                    <p>A custom-built weapons system where behaviour is built using aggregation.</p>
+                    <span class="project-link">View project →</span>
+                </a>
+
+                <a class="project-card" href="https://florianbruijn.nl/projects/spacefold/spacefold.html" target="_blank" rel="noopener">
+                    <div class="project-tags">Unity · C#</div>
+                    <h3>Turret Behaviour</h3>
+                    <div class="project-meta">Solo Project · 2026</div>
+                    <p>A turret system where more complex behaviour is built using the state pattern. </p>
+                    <span class="project-link">View project →</span>
+                </a>
+
+                <a class="project-card" href="https://florianbruijn.nl/projects/deep-dig/deep-dig.html" target="_blank" rel="noopener">
+                    <div class="project-tags">Unity · C#</div>
+                    <h3>Deep Dig</h3>
+                    <div class="project-meta">VR Internship · 2025</div>
+                    <p>A VR archaeology experience built during my internship at XR Lab, featuring a real-time diggable terrain system using marching cubes and GPU compute shaders.</p>
+                    <span class="project-link">View project →</span>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    <!-- Contact -->
+    <section id="contact">
+        <div class="container">
+            <span class="eyebrow">04 — Contact</span>
+            <p class="contact-intro">Feel free to reach out whether it's about a project, a job, or just to talk game dev.</p>
+            <div class="contact-rows">
+                <a class="contact-row" href="https://discord.com/users/1011770563561279519">
+                    <span class="prompt">✉</span>
+                    <span class="label">Discord</span>
+                    <span class="value">Shockwork</span>
+                </a>
+                <a class="contact-row" href="https://github.com/MarlinSquires" target="_blank" rel="noopener">
+                    <span class="prompt">⌥</span>
+                    <span class="label">GitHub</span>
+                    <span class="value">MarlinSquires</span>
+                </a>
+                <a class="contact-row" href="https://www.linkedin.com/in/marlin-squires-a1407927b/" target="_blank" rel="noopener">
+                    <span class="prompt">in</span>
+                    <span class="label">LinkedIn</span>
+                    <span class="value">Marlin Squires</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    © 2026 Marlin Squires. All rights reserved.
+</footer>
+
+
+
+<script>
+    // Ambient ASCII-grid background
+    (function () {
+        var canvas = document.getElementById('ascii-bg');
+        if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        var ctx = canvas.getContext('2d');
+        var chars = ' .:-=+*#%@';
+        var fontSize = 64;
+        var cols, rows, t = 0;
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            cols = Math.ceil(canvas.width / fontSize);
+            rows = Math.ceil(canvas.height / fontSize);
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = fontSize + 'px "IBM Plex Mono", monospace';
+            ctx.textBaseline = 'top';
+
+            for (var y = 0; y < rows; y++) {
+                for (var x = 0; x < cols; x++) {
+                    var n = Math.sin(x * 0.18 + t) + Math.cos(y * 0.22 + t * 0.7);
+                    var v = (n + 2) / 4; // normalize 0..1
+                    if (v < 0.15) continue; // sparse field
+                    var idx = Math.floor(v * (chars.length - 1));
+                    var alpha = (v - 0.55) * 0.5;
+                    ctx.fillStyle = 'rgba(255, 138, 61, ' + alpha.toFixed(3) + ')';
+                    ctx.fillText(chars[idx], x * fontSize, y * fontSize);
+                }
+            }
+
+            t += 0.012;
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+        draw();
+    })();
+</script>
 
 </body>
 </html>
