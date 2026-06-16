@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Marlin Squires</title>
+    <link rel="icon" type="image/png" href="assets/icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="css1/base.css">
+    <link href="css1/base.css" rel="stylesheet">
     <link href="css1/index.css" rel="stylesheet">
 </head>
+
+
+
 <body>
 
 <canvas id="ascii-bg"></canvas>
@@ -45,7 +49,7 @@
                 <div>
                     <p>I'm a second-year CMGT student at Hanze Groningen. I have an
                         affinity for designing code that is accessible, maintainable, and extensible,
-                        and I love seeing games come to life as the systems come online. </p>
+                        and I love seeing projects come to life as the gameplay systems come online. </p>
                     <p>Outside of code I follow some artistic pursuits, enjoy
                         cooking delicious meals, and play basketball, badminton, and go running. </p>
                 </div>
@@ -72,8 +76,6 @@
     </section>
 
 
-
-
     <!-- Projects -->
     <section id="projects">
         <div class="container">
@@ -88,27 +90,19 @@
                     <span class="project-link">View project →</span>
                 </a>
 
-                <a class="project-card" href="https://florianbruijn.nl/projects/windows-defender/windows-defender.html" target="_blank" rel="noopener">
+                <a class="project-card" href="html/project2.html" target="_blank" rel="noopener">
                     <div class="project-tags">Unity · C#</div>
                     <h3>Modular Guns</h3>
-                    <div class="project-meta">Solo Development · 2026</div>
+                    <div class="project-meta">Solo project · 2026</div>
                     <p>A custom-built weapons system where behaviour is built using aggregation.</p>
                     <span class="project-link">View project →</span>
                 </a>
 
-                <a class="project-card" href="https://florianbruijn.nl/projects/spacefold/spacefold.html" target="_blank" rel="noopener">
+                <a class="project-card" href="html/project3.html" target="_blank" rel="noopener">
                     <div class="project-tags">Unity · C#</div>
                     <h3>Turret Behaviour</h3>
                     <div class="project-meta">Solo Project · 2026</div>
                     <p>A turret system where more complex behaviour is built using the state pattern. </p>
-                    <span class="project-link">View project →</span>
-                </a>
-
-                <a class="project-card" href="https://florianbruijn.nl/projects/deep-dig/deep-dig.html" target="_blank" rel="noopener">
-                    <div class="project-tags">Unity · C#</div>
-                    <h3>Deep Dig</h3>
-                    <div class="project-meta">VR Internship · 2025</div>
-                    <p>A VR archaeology experience built during my internship at XR Lab, featuring a real-time diggable terrain system using marching cubes and GPU compute shaders.</p>
                     <span class="project-link">View project →</span>
                 </a>
 
@@ -153,50 +147,7 @@
 
 
 
-<script>
-    // Ambient ASCII-grid background
-    (function () {
-        var canvas = document.getElementById('ascii-bg');
-        if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-        var ctx = canvas.getContext('2d');
-        var chars = ' .:-=+*#%@';
-        var fontSize = 64;
-        var cols, rows, t = 0;
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            cols = Math.ceil(canvas.width / fontSize);
-            rows = Math.ceil(canvas.height / fontSize);
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.font = fontSize + 'px "IBM Plex Mono", monospace';
-            ctx.textBaseline = 'top';
-
-            for (var y = 0; y < rows; y++) {
-                for (var x = 0; x < cols; x++) {
-                    var n = Math.sin(x * 0.18 + t) + Math.cos(y * 0.22 + t * 0.7);
-                    var v = (n + 2) / 4; // normalize 0..1
-                    if (v < 0.15) continue; // sparse field
-                    var idx = Math.floor(v * (chars.length - 1));
-                    var alpha = (v - 0.55) * 0.5;
-                    ctx.fillStyle = 'rgba(255, 138, 61, ' + alpha.toFixed(3) + ')';
-                    ctx.fillText(chars[idx], x * fontSize, y * fontSize);
-                }
-            }
-
-            t += 0.012;
-            requestAnimationFrame(draw);
-        }
-
-        window.addEventListener('resize', resize);
-        resize();
-        draw();
-    })();
-</script>
+<script src="js/asciiBG.js"></script>
 
 </body>
 </html>

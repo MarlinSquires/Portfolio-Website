@@ -1,0 +1,21 @@
+﻿/* base.css */
+/* Custom Properties for Global Design System */
+:root {
+    --bg-deep: #0a110d;          /* Dark forest floor background */
+    --bg-surface: #121e17;       /* Card and header background */
+    --bg-surface-hover: #1a2e23; /* Interactive hover states */
+    --accent: #52b788;           /* Vibrant mint/sage accent */
+    --accent-dim: #2d6a4f;       /* Deep moss green secondary */
+    --text-main: #f4f7f5;         /* Crisp off-white for high contrast readable text */
+    --text-muted: #95a79e;        /* Muted sage for secondary details */
+    --font-sans: 'Space Grotesk', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--display);
+}
+/* Any universal header, footer, or link styles go here too */

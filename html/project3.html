@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Breda Intake Assignment</title>
+    <title>Turret Behaviour</title>
 
     <!-- Required font systems for your index stylesheet rules -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,8 +32,8 @@
 <main>
     <div class="hero">
         <span class="tag">C++</span>
-        <h1>Cow <span>Abductor</span></h1>
-        <p>A top-down arcade game built without the use of a game engine.</p>
+        <h1>Turret <span>Behaviour</span></h1>
+        <p>Extensible turret behaviour built through the state pattern.</p>
     </div>
 
     <section>
@@ -66,10 +66,9 @@
             a gameObject's behaviour is defined almost entirely by the components it owns.
             </p>
 
+            <div class="code-wrapper">
+                <div class="code-header">C++</div>
 <!-- CODE BLOCK - KEEP SHITTY INDENTS -->
-<div class="code-wrapper">
-    <div class="code-header">C++</div>
-
 <pre>
 <span class="keyword">class</span> <span class="type">GameObject</span>
 {
@@ -150,11 +149,9 @@
                 it returned to construct a new sprite using <code>make_unique()</code>. The <code>SpriteRenderer</code>
                 took this <code>unique_ptr</code> and transferred ownership of it to itself, ensuring every
             </p>
-
+            <div class="code-wrapper">
+                <div class="code-header">C++</div>
 <!-- CODE BLOCK - KEEP SHITTY INDENTS -->
-<div class="code-wrapper">
-    <div class="code-header">C++</div>
-
 <pre>
 
 SpriteFactory::<span class="type">SpriteInfo</span> ufoInfo = { <span class="string">"assets/ufo.png"</span>, 3 };
@@ -175,7 +172,7 @@ SpriteFactory::<span class="type">SpriteInfo</span> treeInfo = { <span class="st
 }</pre>
 </div>
 <!-- CODE BLOCK ENDS HERE -->
-</div>
+        </div>
 
 
         <!-- OBJECT POOL SYSTEM -->
@@ -183,16 +180,14 @@ SpriteFactory::<span class="type">SpriteInfo</span> treeInfo = { <span class="st
             <h2>Object pool system</h2>
             <p>
                 To keep things performant, I opted to use an object pooling system for the two types of gameObjects
-                that would regularly be spawned in: cows and missiles. To achieve this, I again needed to use
+                that would regularly be spawned in; cows and missiles. To achieve this, I again needed to use
                 a variadic template function. I had wrapped these gameObjects in a prefab class that handled
                 the necessary <code>AddComponent()</code> calls, but this meant that every prefab had a different
                 set of arguments to be passed in its constructor.
             </p>
-
+            <div class="code-wrapper">
+                <div class="code-header">C++</div>
 <!-- CODE BLOCK - KEEP SHITTY INDENTS -->
-<div class="code-wrapper">
-    <div class="code-header">C++</div>
-
 <pre>
 
 <span class="keyword">class</span> <span class="type">ObjectPool</span>
@@ -227,37 +222,41 @@ SpriteFactory::<span class="type">SpriteInfo</span> treeInfo = { <span class="st
 
 };
 </pre>
-</div>
-<!-- CODE BLOCK ENDS HERE -->
+            </div>
+            <!-- CODE BLOCK ENDS HERE -->
+
 
             <p>
-                The rest of the system just followed generic pooling functionality,
-                spawning and returning objects to the pool instead of instantiating and destroying them.
+                The rest of the system just followed generic pooling functionality.
             </p>
-<div class="code-wrapper">
-    <div class="code-header">C++</div>
+            <div class="code-wrapper">
+                <div class="code-header">C++</div>
 
 <!-- CODE BLOCK - KEEP SHITTY INDENTS -->
 <pre>
 
 <span class="type">GameObject</span>* <span class="type">ObjectPool</span>::<span class="function">SpawnFromPool</span>()
 {
-    <span class="control">if</span> (pool.<span class="function">empty</span>()) <span class="control">return</span> <span class="keyword">nullptr</span>;
-    <span class="keyword">auto</span> <span class="variable">go</span> = pool.<span class="function">front</span>();
-    pool.<span class="function">pop</span>();
-    <span class="variable">go</span>-&gt;<span class="function">SetActive</span>(<span class="keyword">true</span>);
-    <span class="control">return</span> <span class="variable">go</span>;
+	<span class="control">if</span> (pool.<span class="function">empty</span>()) <span class="control">return</span> <span class="keyword">nullptr</span>;
+	<span class="keyword">auto</span> <span class="variable">go</span> = pool.<span class="function">front</span>();
+	pool.<span class="function">pop</span>();
+	<span class="variable">go</span>-&gt;<span class="function">SetActive</span>(<span class="keyword">true</span>);
+	<span class="control">return</span> <span class="variable">go</span>;
 }
 
 <span class="keyword">void</span> <span class="type">ObjectPool</span>::<span class="function">ReturnToPool</span>(<span class="type">GameObject</span>* go)
 {
-    pool.<span class="function">push</span>(go);
-    go-&gt;<span class="function">SetActive</span>(<span class="keyword">false</span>);
+	pool.<span class="function">push</span>(go);
+	go-&gt;<span class="function">SetActive</span>(<span class="keyword">false</span>);
 }
 
 </pre>
-</div>
-<!-- CODE BLOCK ENDS HERE -->
+            </div>
+            <!-- CODE BLOCK ENDS HERE -->
+
+
+
+
         </div>
 
 
