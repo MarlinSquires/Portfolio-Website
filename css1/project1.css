@@ -77,16 +77,6 @@ h2 {
     flex-direction: column;
 }
 
-/* Prepend index-style double slashes to headings
-h2::before {
-    content: "//";
-    font-family: var(--mono);
-    font-size: 0.85rem;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    margin-bottom: 8px;
-    text-transform: uppercase;
-}*/
 
 p {
     color: var(--muted);

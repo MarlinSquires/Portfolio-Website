@@ -1,7 +1,13 @@
-﻿// Ambient ASCII-grid background
+﻿
+
+
+
+// Ambient ASCII-grid background
 (function drawASCII() {
     var canvas = document.getElementById('ascii-bg');
     if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const rootStyles = getComputedStyle(document.documentElement);
+    const accentRGB = rootStyles.getPropertyValue('--accent-rgb').trim();
 
     var ctx = canvas.getContext('2d');
     var chars = ' .:-=+*#%@';
@@ -27,7 +33,7 @@
                 if (v < 0.15) continue; // sparse field
                 var idx = Math.floor(v * (chars.length - 1));
                 var alpha = (v - 0.55) * 0.5;
-                ctx.fillStyle = 'rgba(255, 138, 61, ' + alpha.toFixed(3) + ')';
+                ctx.fillStyle = `rgba(${accentRGB}, ${alpha.toFixed(3)})`;
                 ctx.fillText(chars[idx], x * fontSize, y * fontSize);
             }
         }

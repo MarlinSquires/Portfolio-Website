@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 
-    <link rel="stylesheet" href="../css1/base.css">
+    <link rel="stylesheet" href="../css2/base.css">
     <link href="../css1/project1.css" rel="stylesheet">
 
 </head>
@@ -121,11 +121,11 @@
 <!-- CODE BLOCK ENDS HERE -->
 
             <p>
-            The base <code>GameObject</code> class is barebones, containing only a vector2 position,
+            The base <code>GameObject</code> class is a skeleton, containing only a vector2 position,
             component-handling logic, and members for lifecycle and debugging.
             At the core of this is the <code>AddComponent()</code> function,
             which uses variadic templates to pass any number of <code>Component</code> constructor
-            arguments through a single <code>Args...</code> parameter.
+            arguments through a single <code>Args...</code> parameter pack.
             </p>
         </div>
 

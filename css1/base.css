@@ -7,6 +7,11 @@
     --text: #eef0f2;
     --muted: #8d96a3;
     --accent: #ff8a3d;
+    --accent-soft: rgba(255, 138, 61, 0.12);
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Space Grotesk', sans-serif;
+
+    /* FOR CODEBLOCKS: */
     --keyword: #2f86e4;
     --type: #60ea9b;
     --function: #ece794;
@@ -14,9 +19,7 @@
     --string: #f4ab7d;
     --comment: #a6ed77;
     --control: #de9ffa;
-    --accent-soft: rgba(255, 138, 61, 0.12);
-    --mono: 'IBM Plex Mono', monospace;
-    --display: 'Space Grotesk', sans-serif;
+
 }
 
 body {
