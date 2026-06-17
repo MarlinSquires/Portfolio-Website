@@ -11,8 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 
-    <link rel="stylesheet" href="../css2/base.css">
-    <link href="../css1/project1.css" rel="stylesheet">
+    <link href="../css/basePastel4.css" rel="stylesheet">
+    <link href="../css/projectPage.css" rel="stylesheet">
 
 </head>
 <body>
@@ -147,8 +147,8 @@
                 held an <code>unordered_map</code> that took a sprite name as its key (e.g: "tree")
                 and returned a struct that held the corresponding constructor arguments (e.g: "assets/tree.png", 6).
                 A static <code>BuildSprite()</code> function took a key as its parameter, and used the data
-                it returned to construct a new sprite using <code>make_unique()</code>. The <code>SpriteRenderer</code>
-                took this <code>unique_ptr</code> and transferred ownership of it to itself, ensuring every
+                it returned to construct a new sprite using <code>std::make_unique()</code>. The <code>SpriteRenderer</code>
+                took this <code>std::unique_ptr</code> and transferred ownership of it to itself using the <code>std::move()</code> function.
             </p>
 
 <!-- CODE BLOCK - KEEP SHITTY INDENTS -->
@@ -183,10 +183,10 @@ SpriteFactory::<span class="type">SpriteInfo</span> treeInfo = { <span class="st
             <h2>Object pool system</h2>
             <p>
                 To keep things performant, I opted to use an object pooling system for the two types of gameObjects
-                that would regularly be spawned in: cows and missiles. To achieve this, I again needed to use
-                a variadic template function. I had wrapped these gameObjects in a prefab class that handled
+                that would regularly be spawned in: cows and missiles. I had wrapped these gameObjects in a <code>Prefab</code> class that handled
                 the necessary <code>AddComponent()</code> calls, but this meant that every prefab had a different
-                set of arguments to be passed in its constructor.
+                set of arguments to be passed in its constructor. To solve this issue, I again needed to use
+                a variadic template function:
             </p>
 
 <!-- CODE BLOCK - KEEP SHITTY INDENTS -->
@@ -231,7 +231,7 @@ SpriteFactory::<span class="type">SpriteInfo</span> treeInfo = { <span class="st
 <!-- CODE BLOCK ENDS HERE -->
 
             <p>
-                The rest of the system just followed generic pooling functionality,
+                The rest of the system followed generic pooling functionality,
                 spawning and returning objects to the pool instead of instantiating and destroying them.
             </p>
 <div class="code-wrapper">

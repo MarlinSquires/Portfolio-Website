@@ -11,8 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 
-    <link rel="stylesheet" href="../css1/base.css">
-    <link href="../css1/project1.css" rel="stylesheet">
+    <link href="../css/basePastel4.css" rel="stylesheet">
+    <link href="../css/projectPage.css" rel="stylesheet">
 
 </head>
 <body>
@@ -42,31 +42,41 @@
             <h2>Overview</h2>
             <p>
                 This is a modular weapons system I built for my programming class, with the intention of
-                displaying some more advanced system design. Every gun holds 4 references to scriptable
+                learning some more advanced system design. Every gun holds references to scriptable
                 objects, which together define how it functions.
             </p>
             <div class="image-container">
-                <img src="../assets/CowAbductor.png" alt="Cow Abductor">
+                <img src="../assets/UML.png" alt="UML">
             </div>
         </div>
 
-        <!-- MY FIRST PROJECT-->
+        <!-- SYSTEM DESCRIPTION-->
         <div>
-            <h2>My first C++ project</h2>
+            <h2>The system</h2>
+            <div class="image-container">
+                <img src="../assets/UML.png" alt="UML">
+            </div>
             <p>
-                This project was my first ever exposure to C++ and engine-less gamedev, and the transition
-                from C# and Unity took some time. Worrying about memory management, circular dependencies,
-                and the complete lack of engine tooling made every new system a labour of love, but at the
-                same time the newfound level of control and ownership over my game was gratifying.
+                Every gun holds 3 scriptable object references, which are the <code>ShootType</code>,
+                <code>MoveType</code>, and <code>ElementType</code>, all inheriting from
+                the <code>EffectType</code> base class. The shoot type determines the spread,
+                fire rate, and number of bullets that are shot. The move type determines how those bullets move through space,
+                and the element type determines whether the bullets have a neutral, ice, or fire element.
+                <br>
+                There are a number of pickups that spawn in the world, and each one holds its own reference to
+                a single <code>EffectType</code>. Upon pickup, the <code>PickupHandler</code> parses the derived type
+                and injects it into the corresponding field on the currently equipped weapon.
             </p>
         </div>
 
-        <!-- GAMEOBJECT SYSTEM -->
+        <!-- CUSTOM EDITOR SCRIPTS -->
         <div>
-            <h2>The GameObject system</h2>
-            <p>Instead of opting for a deep inheritance hierarchy,
-            I drew on my familiarity with Unity to design a composition-based system, where
-            a gameObject's behaviour is defined almost entirely by the components it owns.
+            <h2>Custom editor scripts</h2>
+            <p>
+                While working on this project I learned about custom editor scripts, which are a way
+                to control how your script is displayed on the Unity Editor. They are incredibly useful,
+                and can for example be used to show or hide fields based on certain conditions,
+                such as the value of a boolean or enum.
             </p>
 
             <div class="code-wrapper">

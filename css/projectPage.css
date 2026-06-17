@@ -160,6 +160,11 @@ nav div {
     max-width: 640px;
 }
 
+.hero h1
+{
+    color: var(--text);
+}
+
 /* ---------- Media Containers ---------- */
 .image-container {
     margin: 32px 0;

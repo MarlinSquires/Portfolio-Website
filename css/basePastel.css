@@ -1,0 +1,39 @@
+﻿/* basePastel.css */
+:root {
+    --bg: #1c2321;             /* Deep muted charcoal-green sage */
+    --panel: #242c29;          /* Soft slate-green card surface */
+    --panel-alt: #2b3531;      /* Slightly lighter tint for nested panels */
+    --border: #384540;         /* Muted pastel border definition */
+    --text: #b7e4c7;           /* Soft off-white to eliminate eye strain */
+    --muted: #a3b19b;          /* Soft pastel dusty-sage for secondary text */
+    --accent: #b37372;         /* Pastel mint/sage primary accent */
+    --accent-rgb: 142, 96, 95; /* Hex alternative raw RGB channels for JS */
+    --accent-soft: rgba(183, 228, 199, 0.15); /* Translucent overlay hue */
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Space Grotesk', sans-serif;
+
+
+    /* FOR CODEBLOCKS: */
+    --keyword: #2f86e4;
+    --type: #60ea9b;
+    --function: #ece794;
+    --variable: #89ecec;
+    --string: #f4ab7d;
+    --comment: #a6ed77;
+    --control: #de9ffa;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--display);
+}
+/* Any universal header, footer, or link styles go here too
+
+--text: #eef1f0;
+--accent: #CDB6E3;
+
+--accent: #8E605F;
+
+*/
+
