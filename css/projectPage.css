@@ -206,7 +206,8 @@ pre {
     overflow-x: auto;
     font-family: var(--mono);
     font-size: 0.9rem;
-    color: var(--text);
+    /*color: var(--text);*/
+    color: white;
     line-height: 1.6;
 }
 

@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 
-    <link href="../css/basePastel4.css" rel="stylesheet">
+    <link href="../css/basePastel5.css" rel="stylesheet">
     <link href="../css/projectPage.css" rel="stylesheet">
 
 </head>
@@ -45,231 +45,104 @@
                 learning some more advanced system design. Every gun holds references to scriptable
                 objects, which together define how it functions.
             </p>
-            <div class="image-container">
-                <img src="../assets/UML.png" alt="UML">
-            </div>
+
+            <video width="720" height="440" autoplay muted controls>
+                <source src="../assets/ModularGuns/weaponsShowcase.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
         </div>
 
         <!-- SYSTEM DESCRIPTION-->
         <div>
             <h2>The system</h2>
             <div class="image-container">
-                <img src="../assets/UML.png" alt="UML">
+                <img src="../assets/ModularGuns/UML.png" alt="UML">
             </div>
             <p>
                 Every gun holds 3 scriptable object references, which are the <code>ShootType</code>,
                 <code>MoveType</code>, and <code>ElementType</code>, all inheriting from
-                the <code>EffectType</code> base class. The shoot type determines the spread,
+                the <code>EffectType</code> base class. The shoot type determines a large number of variables, such as damage, spread,
                 fire rate, and number of bullets that are shot. The move type determines how those bullets move through space,
                 and the element type determines whether the bullets have a neutral, ice, or fire element.
-                <br>
+                <br><br>
                 There are a number of pickups that spawn in the world, and each one holds its own reference to
                 a single <code>EffectType</code>. Upon pickup, the <code>PickupHandler</code> parses the derived type
                 and injects it into the corresponding field on the currently equipped weapon.
+                <br>
+                Then, every time the gun fires, it injects its own references into the bullet, which the bullet
+                uses to determine its behaviour.
             </p>
         </div>
 
         <!-- CUSTOM EDITOR SCRIPTS -->
         <div>
             <h2>Custom editor scripts</h2>
+
+            <div class="image-container">
+                <img src="../assets/ModularGuns/inspector.png" alt="Inspector">
+            </div>
+
             <p>
                 While working on this project I learned about custom editor scripts, which are a way
-                to control how your script is displayed on the Unity Editor. They are incredibly useful,
-                and can for example be used to show or hide fields based on certain conditions,
-                such as the value of a boolean or enum.
+                to control how your script is displayed on the Unity Editor. They are incredibly useful when building systems
+                that designers will need to interact with, and can for example be used to show or hide
+                fields based on certain conditions, such as the value of a boolean or enum.
             </p>
 
             <div class="code-wrapper">
                 <div class="code-header">C++</div>
 <!-- CODE BLOCK - KEEP SHITTY INDENTS -->
 <pre>
-<span class="keyword">class</span> <span class="type">GameObject</span>
+<span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="function">OnInspectorGUI</span>()
 {
-<span class="keyword">public</span>:
+    serializedObject.<span class="function">Update</span>();
 
-    Tmpl8::<span class="type">vec2</span> pos;
-    <span class="keyword">bool</span> debug = <span class="keyword">false</span>;
+    <span class="type">ShootType</span> <span class="variable">instance</span> = (<span class="type">ShootType</span>)target;
 
-    <span class="keyword">void</span> <span class="function">Start</span>();
-    <span class="keyword">void</span> <span class="function">Tick</span>();
+    <span class="comment">// Draw all properties as normal</span>
+    <span class="function">DrawDefaultInspector</span>();
 
-
-    <span class="keyword">template</span> &lt<span class="keyword">typename</span> <span class="type">T</span>, <span class="keyword">typename</span>... <span class="type">Args</span>>
-    <span class="type">T</span>& <span class="function">AddComponent</span>(<span class="type">Args</span>&&... args)
+    <span class="comment">// Display conditional properties depending on type</span>
+    <span class="control">switch</span> (_behaviourProp.enumValueIndex)
     {
-        <span class="keyword">auto</span> <span class="variable">comp</span> = std::<span class="function">make_unique</span>&lt<span class="type">T</span>>(std::<span class="function">forward</span>&lt<span class="type">Args</span>>(args)...);
-        <span class="variable">comp</span>->gameObject = <span class="keyword">this</span>;
-        <span class="type">T</span>& <span class="variable">ref</span> = *<span class="variable">comp</span>;
-        components.<span class="function">push_back</span>(std::<span class="function">move</span>(<span class="variable">comp</span>));
-        <span class="control">return</span> <span class="variable">ref</span>;
+        <span class="control">case</span> (<span class="keyword">int</span>)<span class="type">ShootType::ShootBehaviour</span>.Spreadshot:
+            <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_bulletsProp);
+            <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_spreadOrientation);
+
+            <span class="variable">instance</span>.maxAngle = <span class="variable">instance</span>.totalSpread / <span class="variable">instance</span>.bullets;
+
+            <span class="comment">// Custom slider for value, necessary for taking dynamic values for range</span>
+            _angleProp.floatValue = <span class="type">Mathf</span>.<span class="function">Clamp</span>(_angleProp.floatValue, 0f, <span class="variable">instance</span>.maxAngle);
+            _angleProp.floatValue = <span class="type">EditorGUILayout</span>.<span class="function">Slider</span>(
+                <span class="string">"Angle"</span>,
+                _angleProp.floatValue,
+                0f,
+                <span class="variable">instance</span>.maxAngle
+            );
+            <span class="control">break</span>;
+
+        <span class="control">case</span> (<span class="keyword">int</span>)<span class="type">ShootType::ShootBehaviour</span>.Grapeshot:
+            <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_bulletsProp);
+            <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_spreadProp);
+            <span class="control">break</span>;
     }
 
-    <span class="keyword">template</span> &lt<span class="keyword">typename</span> <span class="type">T</span>> <span class="type">T</span>* <span class="function">GetComponent</span>()
-    {
-        <span class="control">for</span> (<span class="keyword">const auto</span>& <span class="variable">component</span> : components)
-        {
-            <span class="type">T</span>* <span class="variable">ptr</span> = <span class="keyword">dynamic_cast</span><<span class="type">T</span>*>(<span class="variable">component</span>.<span class="function">get</span>());
-            <span class="control">if</span> (<span class="variable">ptr</span>) <span class="control">return</span> <span class="variable">ptr</span>;
-        }
-        <span class="control">return</span> <span class="keyword">nullptr</span>;
-    }
+    <span class="comment">// Apply any changes made in inspector</span>
+    serializedObject.<span class="function">ApplyModifiedProperties</span>();
 
+}
 
-    <span class="keyword">void</span> <span class="function">SetActive</span>(<span class="keyword">bool</span> isActive);
-
-    <span class="function">GameObject</span>(Tmpl8::<span class="type">vec2</span> spawnPos, <span class="keyword">bool</span> debug) : pos(spawnPos), debug(debug){};
-
-
-<span class="keyword">private</span>:
-
-    std::<span class="type">vector</span>&ltstd::<span class="type">unique_ptr</span>&lt<span class="type">Component</span>>> components;
-
-    <span class="keyword">bool</span> active = <span class="keyword">true</span>; <span class="comment">// Whether to run Tick() logic</span>
-
-    <span class="keyword">void</span> <span class="function">DrawOrigin</span>();
-
-};</pre>
+</pre>
 </div>
 <!-- CODE BLOCK ENDS HERE -->
 
             <p>
-            The base <code>GameObject</code> class is barebones, containing only a vector2 position,
-            component-handling logic, and members for lifecycle and debugging.
-            At the core of this is the <code>AddComponent()</code> function,
-            which uses variadic templates to pass any number of <code>Component</code> constructor
-            arguments through a single <code>Args...</code> parameter.
+                At the core of this functionality lies Unity's built-in <code>OnInspectorGUI()</code>
+                method, which is run every time a value is changed through the inspector, and the
+                <code>PropertyField()</code> method, which displays a serialized field
+                in the inspector. Using these allows me to change which fields are displayed through the
+                use of an enum and switch statement.
             </p>
-        </div>
-
-
-
-        <!-- SPRITE FACTORY SYSTEM -->
-        <div>
-            <h2>Sprite factory system</h2>
-            <p>
-                The Tmpl8 library provides a <code>Sprite</code> class that takes a
-                file location and frame count in its constructor. However, I wanted to be
-                able to pass my <code>SpriteRenderer</code> component a sprite directly, without having
-                to worry about the sprite's properties. Initially, I passed the <code>SpriteRenderer</code>
-                a raw pointer to a pre-existing sprite object, but this meant that all gameObjects with the same sprite
-                also shared the actual sprite object, making it impossible to handle animations correctly.
-                <br>
-                <br>
-                To fix this, I utilized the factory pattern. I created a <code>SpriteFactory</code> class that
-                held an <code>unordered_map</code> that took a sprite name as its key (e.g: "tree")
-                and returned a struct that held the corresponding constructor arguments (e.g: "assets/tree.png", 6).
-                A static <code>BuildSprite()</code> function took a key as its parameter, and used the data
-                it returned to construct a new sprite using <code>make_unique()</code>. The <code>SpriteRenderer</code>
-                took this <code>unique_ptr</code> and transferred ownership of it to itself, ensuring every
-            </p>
-            <div class="code-wrapper">
-                <div class="code-header">C++</div>
-<!-- CODE BLOCK - KEEP SHITTY INDENTS -->
-<pre>
-
-SpriteFactory::<span class="type">SpriteInfo</span> ufoInfo = { <span class="string">"assets/ufo.png"</span>, 3 };
-SpriteFactory::<span class="type">SpriteInfo</span> treeInfo = { <span class="string">"assets/tree.png"</span>, 1 };
-
-<span class="type">unordered_map</span>&lt;<span class="type">string</span>, SpriteFactory::<span class="type">SpriteInfo</span>*&gt; SpriteFactory::sprites =
-{
-    { <span class="string">"ufo"</span>, &ufoInfo },
-    { <span class="string">"tree"</span>, &treeInfo },
-};
-
-<span class="type">unique_ptr</span>&lt;<span class="type">Sprite</span>&gt; SpriteFactory::<span class="function">BuildSprite</span>(<span class="type">string</span> spriteName)
-{
-    <span class="keyword">auto</span> <span class="variable">info</span> = sprites[spriteName];
-
-    <span class="control">return</span> <span class="function">make_unique</span>&lt;<span class="type">Sprite</span>&gt;(<span class="keyword">new</span> <span class="type">Surface</span>(<span class="variable">info</span>-&gt;address.<span class="function">c_str</span>()), <span class="variable">info</span>-&gt;frameCount);
-}
-}</pre>
-</div>
-<!-- CODE BLOCK ENDS HERE -->
-        </div>
-
-
-        <!-- OBJECT POOL SYSTEM -->
-        <div>
-            <h2>Object pool system</h2>
-            <p>
-                To keep things performant, I opted to use an object pooling system for the two types of gameObjects
-                that would regularly be spawned in; cows and missiles. To achieve this, I again needed to use
-                a variadic template function. I had wrapped these gameObjects in a prefab class that handled
-                the necessary <code>AddComponent()</code> calls, but this meant that every prefab had a different
-                set of arguments to be passed in its constructor.
-            </p>
-            <div class="code-wrapper">
-                <div class="code-header">C++</div>
-<!-- CODE BLOCK - KEEP SHITTY INDENTS -->
-<pre>
-
-<span class="keyword">class</span> <span class="type">ObjectPool</span>
-{
-<span class="keyword">public</span>:
-
-    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="type">First</span>, <span class="keyword">typename</span>... <span class="type">Args</span>&gt;
-    <span class="keyword">void</span> <span class="function">InstantiateToPool</span>(<span class="type">First</span> prefab, <span class="type">Scene</span>* scene, <span class="type">Args</span>... args)
-    {
-        <span class="control">for</span> (<span class="keyword">int</span> <span class="variable">i</span> = 0; <span class="variable">i</span> &lt; poolSize; <span class="variable">i</span>++)
-        {
-            <span class="keyword">auto</span> <span class="variable">go</span> = prefab.<span class="function">Load</span>(scene, std::forward&lt;<span class="type">Args</span>&gt;(args)...);
-            <span class="variable">go</span>-&gt;<span class="function">SetActive</span>(<span class="keyword">false</span>);
-            pool.<span class="function">push</span>(<span class="variable">go</span>);
-        }
-    }
-
-
-    <span class="type">GameObject</span>* <span class="function">SpawnFromPool</span>();
-
-    <span class="keyword">void</span> <span class="function">ReturnToPool</span>(<span class="type">GameObject</span>* go);
-
-
-    <span class="comment">// Structors</span>
-    <span class="function">ObjectPool</span>(<span class="keyword">int</span> poolSize) : poolSize(poolSize) {};
-
-<span class="keyword">private</span>:
-
-    <span class="keyword">int</span> poolSize;
-
-    std::queue&lt;<span class="type">GameObject</span>*&gt; pool;
-
-};
-</pre>
-            </div>
-            <!-- CODE BLOCK ENDS HERE -->
-
-
-            <p>
-                The rest of the system just followed generic pooling functionality.
-            </p>
-            <div class="code-wrapper">
-                <div class="code-header">C++</div>
-
-<!-- CODE BLOCK - KEEP SHITTY INDENTS -->
-<pre>
-
-<span class="type">GameObject</span>* <span class="type">ObjectPool</span>::<span class="function">SpawnFromPool</span>()
-{
-	<span class="control">if</span> (pool.<span class="function">empty</span>()) <span class="control">return</span> <span class="keyword">nullptr</span>;
-	<span class="keyword">auto</span> <span class="variable">go</span> = pool.<span class="function">front</span>();
-	pool.<span class="function">pop</span>();
-	<span class="variable">go</span>-&gt;<span class="function">SetActive</span>(<span class="keyword">true</span>);
-	<span class="control">return</span> <span class="variable">go</span>;
-}
-
-<span class="keyword">void</span> <span class="type">ObjectPool</span>::<span class="function">ReturnToPool</span>(<span class="type">GameObject</span>* go)
-{
-	pool.<span class="function">push</span>(go);
-	go-&gt;<span class="function">SetActive</span>(<span class="keyword">false</span>);
-}
-
-</pre>
-            </div>
-            <!-- CODE BLOCK ENDS HERE -->
-
-
-
-
         </div>
 
 

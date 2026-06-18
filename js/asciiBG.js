@@ -4,7 +4,7 @@
 
 // Ambient ASCII-grid background
 (function drawASCII() {
-    var canvas = document.getElementById('ascii-bg');
+    var canvas = document.getElementById('bg-effect');
     if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const rootStyles = getComputedStyle(document.documentElement);
     const accentRGB = rootStyles.getPropertyValue('--accent-rgb').trim();
