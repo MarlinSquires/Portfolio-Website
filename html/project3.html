@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grand Escape</title>
+    <title>Breda Intake Assignment</title>
 
     <!-- Required font systems for your index stylesheet rules -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,99 +32,105 @@
 <main>
     <div class="hero">
         <span class="tag">C++</span>
-        <h1>Turret <span>Behaviour</span></h1>
-        <p>Extensible turret behaviour built through the state pattern.</p>
+        <h1>Grand <span>Escape</span></h1>
+        <p>
+            A 2D local-coop puzzle platformer.
+        </p>
     </div>
 
     <section>
         <!-- OVERVIEW-->
         <div>
             <h2>Overview</h2>
-            <p>Cow Abductor is an arcade game built in C++ using the barebones Tmpl8 2026 framework, submitted as my intake assignment for BUas CMGT.
+            <p>
+                Grand Escape is a Y2 project built alongside 5 other team members. The goal of the game
+                is to encourage communication between players through the use of gameplay mechanics
+                and level design.
             </p>
             <div class="image-container">
                 <img src="../assets/CowAbductor/CowAbductor.png" alt="Cow Abductor">
             </div>
         </div>
 
-        <!-- OVERVIEW-->
+        <!-- PLAYER BEHAVIOUR - STATE PATTERN-->
         <div>
-            <h2>Overview</h2>
+            <h2>Player behaviour - state pattern</h2>
             <p>
-                This project was my first ever exposure to C++ and engine-less gamedev, and the transition
-                from C# and Unity took some time. Worrying about memory management, circular dependencies,
-                and the complete lack of engine tooling made every new system a labour of love, but at the
-                same time the newfound level of control and ownership over my game was gratifying.
+                After the initial prototyping phase, I rebuilt player behaviour to utilize the state pattern.
             </p>
         </div>
 
         <!-- GAMEOBJECT SYSTEM -->
         <div>
             <h2>The GameObject system</h2>
-            <p>Instead of opting for a deep inheritance hierarchy,
-            I drew on my familiarity with Unity to design a composition-based system, where
-            a gameObject's behaviour is defined almost entirely by the components it owns.
+            <p>
+                Instead of opting for a deep inheritance hierarchy,
+                I drew on my familiarity with Unity to design a composition-based system, where
+                a gameObject's behaviour is defined almost entirely by the components it owns.
             </p>
+
 
             <div class="code-wrapper">
                 <div class="code-header">C++</div>
-<!-- CODE BLOCK - KEEP SHITTY INDENTS -->
-<pre>
-<span class="keyword">class</span> <span class="type">GameObject</span>
-{
-<span class="keyword">public</span>:
 
-    Tmpl8::<span class="type">vec2</span> pos;
-    <span class="keyword">bool</span> debug = <span class="keyword">false</span>;
+                <!-- CODE BLOCK STARTS HERE -->
+                <pre class = code-block>
+                    <span class="keyword">class</span> <span class="type">GameObject</span>
+                    {
+                    <span class="keyword">public</span>:
 
-    <span class="keyword">void</span> <span class="function">Start</span>();
-    <span class="keyword">void</span> <span class="function">Tick</span>();
+                        Tmpl8::<span class="type">vec2</span> pos;
+                        <span class="keyword">bool</span> debug = <span class="keyword">false</span>;
 
-
-    <span class="keyword">template</span> &lt<span class="keyword">typename</span> <span class="type">T</span>, <span class="keyword">typename</span>... <span class="type">Args</span>>
-    <span class="type">T</span>& <span class="function">AddComponent</span>(<span class="type">Args</span>&&... args)
-    {
-        <span class="keyword">auto</span> <span class="variable">comp</span> = std::<span class="function">make_unique</span>&lt<span class="type">T</span>>(std::<span class="function">forward</span>&lt<span class="type">Args</span>>(args)...);
-        <span class="variable">comp</span>->gameObject = <span class="keyword">this</span>;
-        <span class="type">T</span>& <span class="variable">ref</span> = *<span class="variable">comp</span>;
-        components.<span class="function">push_back</span>(std::<span class="function">move</span>(<span class="variable">comp</span>));
-        <span class="control">return</span> <span class="variable">ref</span>;
-    }
-
-    <span class="keyword">template</span> &lt<span class="keyword">typename</span> <span class="type">T</span>> <span class="type">T</span>* <span class="function">GetComponent</span>()
-    {
-        <span class="control">for</span> (<span class="keyword">const auto</span>& <span class="variable">component</span> : components)
-        {
-            <span class="type">T</span>* <span class="variable">ptr</span> = <span class="keyword">dynamic_cast</span><<span class="type">T</span>*>(<span class="variable">component</span>.<span class="function">get</span>());
-            <span class="control">if</span> (<span class="variable">ptr</span>) <span class="control">return</span> <span class="variable">ptr</span>;
-        }
-        <span class="control">return</span> <span class="keyword">nullptr</span>;
-    }
+                        <span class="keyword">void</span> <span class="function">Start</span>();
+                        <span class="keyword">void</span> <span class="function">Tick</span>();
 
 
-    <span class="keyword">void</span> <span class="function">SetActive</span>(<span class="keyword">bool</span> isActive);
+                        <span class="keyword">template</span> &lt<span class="keyword">typename</span> <span class="type">T</span>, <span class="keyword">typename</span>... <span class="type">Args</span>>
+                        <span class="type">T</span>& <span class="function">AddComponent</span>(<span class="type">Args</span>&&... args)
+                        {
+                            <span class="keyword">auto</span> <span class="variable">comp</span> = std::<span class="function">make_unique</span>&lt<span class="type">T</span>>(std::<span class="function">forward</span>&lt<span class="type">Args</span>>(args)...);
+                            <span class="variable">comp</span>->gameObject = <span class="keyword">this</span>;
+                            <span class="type">T</span>& <span class="variable">ref</span> = *<span class="variable">comp</span>;
+                            components.<span class="function">push_back</span>(std::<span class="function">move</span>(<span class="variable">comp</span>));
+                            <span class="control">return</span> <span class="variable">ref</span>;
+                        }
 
-    <span class="function">GameObject</span>(Tmpl8::<span class="type">vec2</span> spawnPos, <span class="keyword">bool</span> debug) : pos(spawnPos), debug(debug){};
+                        <span class="keyword">template</span> &lt<span class="keyword">typename</span> <span class="type">T</span>> <span class="type">T</span>* <span class="function">GetComponent</span>()
+                        {
+                            <span class="control">for</span> (<span class="keyword">const auto</span>& <span class="variable">component</span> : components)
+                            {
+                                <span class="type">T</span>* <span class="variable">ptr</span> = <span class="keyword">dynamic_cast</span><<span class="type">T</span>*>(<span class="variable">component</span>.<span class="function">get</span>());
+                                <span class="control">if</span> (<span class="variable">ptr</span>) <span class="control">return</span> <span class="variable">ptr</span>;
+                            }
+                            <span class="control">return</span> <span class="keyword">nullptr</span>;
+                        }
 
 
-<span class="keyword">private</span>:
+                        <span class="keyword">void</span> <span class="function">SetActive</span>(<span class="keyword">bool</span> isActive);
 
-    std::<span class="type">vector</span>&ltstd::<span class="type">unique_ptr</span>&lt<span class="type">Component</span>>> components;
+                        <span class="function">GameObject</span>(Tmpl8::<span class="type">vec2</span> spawnPos, <span class="keyword">bool</span> debug) : pos(spawnPos), debug(debug){};
 
-    <span class="keyword">bool</span> active = <span class="keyword">true</span>; <span class="comment">// Whether to run Tick() logic</span>
 
-    <span class="keyword">void</span> <span class="function">DrawOrigin</span>();
+                    <span class="keyword">private</span>:
 
-};</pre>
-</div>
-<!-- CODE BLOCK ENDS HERE -->
+                        std::<span class="type">vector</span>&ltstd::<span class="type">unique_ptr</span>&lt<span class="type">Component</span>>> components;
+
+                        <span class="keyword">bool</span> active = <span class="keyword">true</span>; <span class="comment">// Whether to run Tick() logic</span>
+
+                        <span class="keyword">void</span> <span class="function">DrawOrigin</span>();
+
+                    };
+                </pre> <!-- CODE BLOCK ENDS HERE -->
+            </div>
+
 
             <p>
-            The base <code>GameObject</code> class is barebones, containing only a vector2 position,
-            component-handling logic, and members for lifecycle and debugging.
-            At the core of this is the <code>AddComponent()</code> function,
-            which uses variadic templates to pass any number of <code>Component</code> constructor
-            arguments through a single <code>Args...</code> parameter.
+                The base <code>GameObject</code> class is a skeleton, containing only a vector2 position,
+                component-handling logic, and members for lifecycle and debugging.
+                At the core of this is the <code>AddComponent()</code> function,
+                which uses variadic templates to pass any number of <code>Component</code> constructor
+                arguments through a single <code>Args...</code> parameter pack.
             </p>
         </div>
 
@@ -132,7 +138,9 @@
 
         <!-- SPRITE FACTORY SYSTEM -->
         <div>
+
             <h2>Sprite factory system</h2>
+
             <p>
                 The Tmpl8 library provides a <code>Sprite</code> class that takes a
                 file location and frame count in its constructor. However, I wanted to be
@@ -146,32 +154,35 @@
                 held an <code>unordered_map</code> that took a sprite name as its key (e.g: "tree")
                 and returned a struct that held the corresponding constructor arguments (e.g: "assets/tree.png", 6).
                 A static <code>BuildSprite()</code> function took a key as its parameter, and used the data
-                it returned to construct a new sprite using <code>make_unique()</code>. The <code>SpriteRenderer</code>
-                took this <code>unique_ptr</code> and transferred ownership of it to itself, ensuring every
+                it returned to construct a new sprite using <code>std::make_unique()</code>. The <code>SpriteRenderer</code>
+                took this <code>std::unique_ptr</code> and transferred ownership of it to itself using the <code>std::move()</code> function.
             </p>
+
+
             <div class="code-wrapper">
                 <div class="code-header">C++</div>
-<!-- CODE BLOCK - KEEP SHITTY INDENTS -->
-<pre>
 
-SpriteFactory::<span class="type">SpriteInfo</span> ufoInfo = { <span class="string">"assets/ufo.png"</span>, 3 };
-SpriteFactory::<span class="type">SpriteInfo</span> treeInfo = { <span class="string">"assets/tree.png"</span>, 1 };
+                <!-- CODE BLOCK STARTS HERE -->
+                <pre class = "code-block">
 
-<span class="type">unordered_map</span>&lt;<span class="type">string</span>, SpriteFactory::<span class="type">SpriteInfo</span>*&gt; SpriteFactory::sprites =
-{
-    { <span class="string">"ufo"</span>, &ufoInfo },
-    { <span class="string">"tree"</span>, &treeInfo },
-};
+                    SpriteFactory::<span class="type">SpriteInfo</span> ufoInfo = { <span class="string">"assets/ufo.png"</span>, 3 };
+                    SpriteFactory::<span class="type">SpriteInfo</span> treeInfo = { <span class="string">"assets/tree.png"</span>, 1 };
 
-<span class="type">unique_ptr</span>&lt;<span class="type">Sprite</span>&gt; SpriteFactory::<span class="function">BuildSprite</span>(<span class="type">string</span> spriteName)
-{
-    <span class="keyword">auto</span> <span class="variable">info</span> = sprites[spriteName];
+                    <span class="type">unordered_map</span>&lt;<span class="type">string</span>, SpriteFactory::<span class="type">SpriteInfo</span>*&gt; SpriteFactory::sprites =
+                    {
+                        { <span class="string">"ufo"</span>, &ufoInfo },
+                        { <span class="string">"tree"</span>, &treeInfo },
+                    };
 
-    <span class="control">return</span> <span class="function">make_unique</span>&lt;<span class="type">Sprite</span>&gt;(<span class="keyword">new</span> <span class="type">Surface</span>(<span class="variable">info</span>-&gt;address.<span class="function">c_str</span>()), <span class="variable">info</span>-&gt;frameCount);
-}
-}</pre>
-</div>
-<!-- CODE BLOCK ENDS HERE -->
+                    <span class="type">unique_ptr</span>&lt;<span class="type">Sprite</span>&gt; SpriteFactory::<span class="function">BuildSprite</span>(<span class="type">string</span> spriteName)
+                    {
+                        <span class="keyword">auto</span> <span class="variable">info</span> = sprites[spriteName];
+
+                        <span class="control">return</span> <span class="function">make_unique</span>&lt;<span class="type">Sprite</span>&gt;(<span class="keyword">new</span> <span class="type">Surface</span>(<span class="variable">info</span>-&gt;address.<span class="function">c_str</span>()), <span class="variable">info</span>-&gt;frameCount);
+                    }
+                </pre> <!-- CODE BLOCK ENDS HERE -->
+            </div>
+
         </div>
 
 
@@ -180,94 +191,93 @@ SpriteFactory::<span class="type">SpriteInfo</span> treeInfo = { <span class="st
             <h2>Object pool system</h2>
             <p>
                 To keep things performant, I opted to use an object pooling system for the two types of gameObjects
-                that would regularly be spawned in; cows and missiles. To achieve this, I again needed to use
-                a variadic template function. I had wrapped these gameObjects in a prefab class that handled
+                that would regularly be spawned in: cows and missiles. I had wrapped these gameObjects in a <code>Prefab</code> class that handled
                 the necessary <code>AddComponent()</code> calls, but this meant that every prefab had a different
-                set of arguments to be passed in its constructor.
+                set of arguments to be passed in its constructor. To solve this issue, I again needed to use
+                a variadic template function:
             </p>
-            <div class="code-wrapper">
-                <div class="code-header">C++</div>
-<!-- CODE BLOCK - KEEP SHITTY INDENTS -->
-<pre>
-
-<span class="keyword">class</span> <span class="type">ObjectPool</span>
-{
-<span class="keyword">public</span>:
-
-    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="type">First</span>, <span class="keyword">typename</span>... <span class="type">Args</span>&gt;
-    <span class="keyword">void</span> <span class="function">InstantiateToPool</span>(<span class="type">First</span> prefab, <span class="type">Scene</span>* scene, <span class="type">Args</span>... args)
-    {
-        <span class="control">for</span> (<span class="keyword">int</span> <span class="variable">i</span> = 0; <span class="variable">i</span> &lt; poolSize; <span class="variable">i</span>++)
-        {
-            <span class="keyword">auto</span> <span class="variable">go</span> = prefab.<span class="function">Load</span>(scene, std::forward&lt;<span class="type">Args</span>&gt;(args)...);
-            <span class="variable">go</span>-&gt;<span class="function">SetActive</span>(<span class="keyword">false</span>);
-            pool.<span class="function">push</span>(<span class="variable">go</span>);
-        }
-    }
 
 
-    <span class="type">GameObject</span>* <span class="function">SpawnFromPool</span>();
-
-    <span class="keyword">void</span> <span class="function">ReturnToPool</span>(<span class="type">GameObject</span>* go);
-
-
-    <span class="comment">// Structors</span>
-    <span class="function">ObjectPool</span>(<span class="keyword">int</span> poolSize) : poolSize(poolSize) {};
-
-<span class="keyword">private</span>:
-
-    <span class="keyword">int</span> poolSize;
-
-    std::queue&lt;<span class="type">GameObject</span>*&gt; pool;
-
-};
-</pre>
-            </div>
-            <!-- CODE BLOCK ENDS HERE -->
-
-
-            <p>
-                The rest of the system just followed generic pooling functionality.
-            </p>
             <div class="code-wrapper">
                 <div class="code-header">C++</div>
 
-<!-- CODE BLOCK - KEEP SHITTY INDENTS -->
-<pre>
+                <!-- CODE BLOCK STARTS HERE -->
+                <pre class = code-block>
 
-<span class="type">GameObject</span>* <span class="type">ObjectPool</span>::<span class="function">SpawnFromPool</span>()
-{
-	<span class="control">if</span> (pool.<span class="function">empty</span>()) <span class="control">return</span> <span class="keyword">nullptr</span>;
-	<span class="keyword">auto</span> <span class="variable">go</span> = pool.<span class="function">front</span>();
-	pool.<span class="function">pop</span>();
-	<span class="variable">go</span>-&gt;<span class="function">SetActive</span>(<span class="keyword">true</span>);
-	<span class="control">return</span> <span class="variable">go</span>;
-}
+                    <span class="keyword">class</span> <span class="type">ObjectPool</span>
+                    {
+                    <span class="keyword">public</span>:
 
-<span class="keyword">void</span> <span class="type">ObjectPool</span>::<span class="function">ReturnToPool</span>(<span class="type">GameObject</span>* go)
-{
-	pool.<span class="function">push</span>(go);
-	go-&gt;<span class="function">SetActive</span>(<span class="keyword">false</span>);
-}
+                        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="type">First</span>, <span class="keyword">typename</span>... <span class="type">Args</span>&gt;
+                        <span class="keyword">void</span> <span class="function">InstantiateToPool</span>(<span class="type">First</span> prefab, <span class="type">Scene</span>* scene, <span class="type">Args</span>... args)
+                        {
+                            <span class="control">for</span> (<span class="keyword">int</span> <span class="variable">i</span> = 0; <span class="variable">i</span> &lt; poolSize; <span class="variable">i</span>++)
+                            {
+                                <span class="keyword">auto</span> <span class="variable">go</span> = prefab.<span class="function">Load</span>(scene, std::forward&lt;<span class="type">Args</span>&gt;(args)...);
+                                <span class="variable">go</span>-&gt;<span class="function">SetActive</span>(<span class="keyword">false</span>);
+                                pool.<span class="function">push</span>(<span class="variable">go</span>);
+                            }
+                        }
 
-</pre>
+
+                        <span class="type">GameObject</span>* <span class="function">SpawnFromPool</span>();
+
+                        <span class="keyword">void</span> <span class="function">ReturnToPool</span>(<span class="type">GameObject</span>* go);
+
+
+                        <span class="comment">// Structors</span>
+                        <span class="function">ObjectPool</span>(<span class="keyword">int</span> poolSize) : poolSize(poolSize) {};
+
+                    <span class="keyword">private</span>:
+
+                        <span class="keyword">int</span> poolSize;
+
+                        std::queue&lt;<span class="type">GameObject</span>*&gt; pool;
+
+                    };
+                </pre> <!-- CODE BLOCK ENDS HERE -->
             </div>
-            <!-- CODE BLOCK ENDS HERE -->
-
-
-
-
         </div>
 
 
+        <p>
+            The rest of the system followed generic pooling functionality,
+            spawning and returning objects to the pool instead of instantiating and destroying them.
+        </p>
 
+        <div class="code-wrapper">
+            <div class="code-header">C++</div>
 
+            <!-- CODE BLOCK STARTS HERE -->
+            <pre class = code-block>
+                    <span class="type">GameObject</span>* <span class="type">ObjectPool</span>::<span class="function">SpawnFromPool</span>()
+                    {
+                        <span class="control">if</span> (pool.<span class="function">empty</span>()) <span class="control">return</span> <span class="keyword">nullptr</span>;
+                        <span class="keyword">auto</span> <span class="variable">go</span> = pool.<span class="function">front</span>();
+                        pool.<span class="function">pop</span>();
+                        <span class="variable">go</span>-&gt;<span class="function">SetActive</span>(<span class="keyword">true</span>);
+                        <span class="control">return</span> <span class="variable">go</span>;
+                    }
+
+                    <span class="keyword">void</span> <span class="type">ObjectPool</span>::<span class="function">ReturnToPool</span>(<span class="type">GameObject</span>* go)
+                    {
+                        pool.<span class="function">push</span>(go);
+                        go-&gt;<span class="function">SetActive</span>(<span class="keyword">false</span>);
+                    }
+                </pre>
+            <!-- CODE BLOCK ENDS HERE -->
+        </div>
+
+        </div>
 
     </section>
 </main>
 
 <!-- Footer -->
 <footer>© 2026 Marlin Squires. All rights reserved.</footer>
+
+
+<script src="../js/dedent.js"></script>
 
 </body>
 </html>

@@ -46,10 +46,12 @@
                 objects, which together define how it functions.
             </p>
 
-            <video width="720" height="440" autoplay muted controls>
+            <video autoplay muted controls class = "video-container">
                 <source src="../assets/ModularGuns/weaponsShowcase.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
+
+
         </div>
 
         <!-- SYSTEM DESCRIPTION-->
@@ -69,8 +71,9 @@
                 a single <code>EffectType</code>. Upon pickup, the <code>PickupHandler</code> parses the derived type
                 and injects it into the corresponding field on the currently equipped weapon.
                 <br>
-                Then, every time the gun fires, it injects its own references into the bullet, which the bullet
-                uses to determine its behaviour.
+                The bullet is essentially just a wrapper around these references. The only logic it holds within itself
+                are related to despawning on collisions or lifetime end. Every time the gun fires, it calls <code>shootType.Shoot()</code>
+                and injects its own references into the bullet, which the bullet uses to determine its behaviour.
             </p>
         </div>
 
@@ -84,57 +87,56 @@
 
             <p>
                 While working on this project I learned about custom editor scripts, which are a way
-                to control how your script is displayed on the Unity Editor. They are incredibly useful when building systems
+                to control how your script is displayed on the Unity inspector. They are incredibly useful when building systems
                 that designers will need to interact with, and can for example be used to show or hide
                 fields based on certain conditions, such as the value of a boolean or enum.
             </p>
 
             <div class="code-wrapper">
                 <div class="code-header">C++</div>
-<!-- CODE BLOCK - KEEP SHITTY INDENTS -->
-<pre>
-<span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="function">OnInspectorGUI</span>()
-{
-    serializedObject.<span class="function">Update</span>();
+                <!-- CODE BLOCK - KEEP SHITTY INDENTS -->
+                <pre class = code-block>
+                    <span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="function">OnInspectorGUI</span>()
+                    {
+                        serializedObject.<span class="function">Update</span>();
 
-    <span class="type">ShootType</span> <span class="variable">instance</span> = (<span class="type">ShootType</span>)target;
+                        <span class="type">ShootType</span> <span class="variable">instance</span> = (<span class="type">ShootType</span>)target;
 
-    <span class="comment">// Draw all properties as normal</span>
-    <span class="function">DrawDefaultInspector</span>();
+                        <span class="comment">// Draw all properties as normal</span>
+                        <span class="function">DrawDefaultInspector</span>();
 
-    <span class="comment">// Display conditional properties depending on type</span>
-    <span class="control">switch</span> (_behaviourProp.enumValueIndex)
-    {
-        <span class="control">case</span> (<span class="keyword">int</span>)<span class="type">ShootType::ShootBehaviour</span>.Spreadshot:
-            <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_bulletsProp);
-            <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_spreadOrientation);
+                        <span class="comment">// Display conditional properties depending on type</span>
+                        <span class="control">switch</span> (_behaviourProp.enumValueIndex)
+                        {
+                            <span class="control">case</span> (<span class="keyword">int</span>)<span class="type">ShootType::ShootBehaviour</span>.Spreadshot:
+                                <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_bulletsProp);
+                                <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_spreadOrientation);
 
-            <span class="variable">instance</span>.maxAngle = <span class="variable">instance</span>.totalSpread / <span class="variable">instance</span>.bullets;
+                                <span class="variable">instance</span>.maxAngle = <span class="variable">instance</span>.totalSpread / <span class="variable">instance</span>.bullets;
 
-            <span class="comment">// Custom slider for value, necessary for taking dynamic values for range</span>
-            _angleProp.floatValue = <span class="type">Mathf</span>.<span class="function">Clamp</span>(_angleProp.floatValue, 0f, <span class="variable">instance</span>.maxAngle);
-            _angleProp.floatValue = <span class="type">EditorGUILayout</span>.<span class="function">Slider</span>(
-                <span class="string">"Angle"</span>,
-                _angleProp.floatValue,
-                0f,
-                <span class="variable">instance</span>.maxAngle
-            );
-            <span class="control">break</span>;
+                                <span class="comment">// Custom slider for value, necessary for taking dynamic values for range</span>
+                                _angleProp.floatValue = <span class="type">Mathf</span>.<span class="function">Clamp</span>(_angleProp.floatValue, 0f, <span class="variable">instance</span>.maxAngle);
+                                _angleProp.floatValue = <span class="type">EditorGUILayout</span>.<span class="function">Slider</span>(
+                                    <span class="string">"Angle"</span>,
+                                    _angleProp.floatValue,
+                                    0f,
+                                    <span class="variable">instance</span>.maxAngle
+                                );
+                                <span class="control">break</span>;
 
-        <span class="control">case</span> (<span class="keyword">int</span>)<span class="type">ShootType::ShootBehaviour</span>.Grapeshot:
-            <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_bulletsProp);
-            <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_spreadProp);
-            <span class="control">break</span>;
-    }
+                            <span class="control">case</span> (<span class="keyword">int</span>)<span class="type">ShootType::ShootBehaviour</span>.Grapeshot:
+                                <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_bulletsProp);
+                                <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_spreadProp);
+                                <span class="control">break</span>;
+                        }
 
-    <span class="comment">// Apply any changes made in inspector</span>
-    serializedObject.<span class="function">ApplyModifiedProperties</span>();
+                        <span class="comment">// Apply any changes made in inspector</span>
+                        serializedObject.<span class="function">ApplyModifiedProperties</span>();
 
-}
-
-</pre>
-</div>
-<!-- CODE BLOCK ENDS HERE -->
+                    }
+                </pre>
+            </div>
+            <!-- CODE BLOCK ENDS HERE -->
 
             <p>
                 At the core of this functionality lies Unity's built-in <code>OnInspectorGUI()</code>
@@ -147,13 +149,14 @@
 
 
 
-
-
     </section>
 </main>
 
 <!-- Footer -->
 <footer>© 2026 Marlin Squires. All rights reserved.</footer>
+
+
+<script src="../js/dedent.js"></script>
 
 </body>
 </html>

@@ -19,6 +19,7 @@ body {
     padding-top: 73px; /* Offset for sticky nav */
 }
 
+
 a {
     color: var(--accent);
     text-decoration: none;
@@ -72,7 +73,7 @@ h2 {
     font-weight: 600;
     font-size: clamp(1.4rem, 2.5vw, 2rem);
     margin-bottom: 24px;
-    color: #ffffff;
+    color: whitesmoke;
     display: flex;
     flex-direction: column;
 }
@@ -181,6 +182,14 @@ nav div {
     display: block;
 }
 
+.video-container {
+    max-width: 100%;    /* Prevents the video from overflowing its container */
+    height: auto;       /* Automatically calculates height to maintain aspect ratio */
+    display: block;     /* Removes extra bottom whitespace caused by inline alignment */
+}
+
+
+
 /* ---------- Code Block Systems ---------- */
 .code-wrapper {
     margin: 32px 0;
@@ -206,9 +215,9 @@ pre {
     overflow-x: auto;
     font-family: var(--mono);
     font-size: 0.9rem;
-    /*color: var(--text);*/
     color: white;
     line-height: 1.6;
+    display: block;
 }
 
 /* Syntax token highlights tailored to the orange-blue style ecosystem */

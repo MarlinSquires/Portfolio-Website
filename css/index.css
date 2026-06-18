@@ -25,13 +25,14 @@ a { color: inherit; text-decoration: none; }
 .container {
     max-width: 1080px;
     margin: 0 auto;
-    padding: 0 32px;
-}
-
-section {
-    padding: 120px 0;
+    padding: 120px 32px 120px;
     border-bottom: 1px solid var(--border);
 }
+
+/*section {
+    padding: 60px 0;
+
+}*/
 
 .eyebrow {
     font-family: var(--mono);
@@ -121,7 +122,7 @@ nav {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    border-bottom: 1px solid var(--border);
+    /*border-bottom: 1px solid var(--border);*/
 }
 
 .hero h1 {
@@ -208,10 +209,6 @@ nav {
     transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
-/*.traits li:hover {
-    border-color: var(--accent);
-    transform: translateX(4px);
-}*/
 
 /* ---------- skills ---------- */
 .skills-grid {
