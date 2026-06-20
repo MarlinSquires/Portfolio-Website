@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Breda Intake Assignment</title>
+    <title>Cow Abductor</title>
+    <link rel="icon" type="image/png" href="../assets/icon.png">
 
     <!-- Required font systems for your index stylesheet rules -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -76,13 +77,6 @@
                     {
                     <span class="keyword">public</span>:
 
-                        Tmpl8::<span class="type">vec2</span> pos;
-                        <span class="keyword">bool</span> debug = <span class="keyword">false</span>;
-
-                        <span class="keyword">void</span> <span class="function">Start</span>();
-                        <span class="keyword">void</span> <span class="function">Tick</span>();
-
-
                         <span class="keyword">template</span> &lt<span class="keyword">typename</span> <span class="type">T</span>, <span class="keyword">typename</span>... <span class="type">Args</span>>
                         <span class="type">T</span>& <span class="function">AddComponent</span>(<span class="type">Args</span>&&... args)
                         {
@@ -103,22 +97,12 @@
                             <span class="control">return</span> <span class="keyword">nullptr</span>;
                         }
 
-
-                        <span class="keyword">void</span> <span class="function">SetActive</span>(<span class="keyword">bool</span> isActive);
-
-                        <span class="function">GameObject</span>(Tmpl8::<span class="type">vec2</span> spawnPos, <span class="keyword">bool</span> debug) : pos(spawnPos), debug(debug){};
-
-
                     <span class="keyword">private</span>:
 
                         std::<span class="type">vector</span>&ltstd::<span class="type">unique_ptr</span>&lt<span class="type">Component</span>>> components;
-
-                        <span class="keyword">bool</span> active = <span class="keyword">true</span>; <span class="comment">// Whether to run Tick() logic</span>
-
-                        <span class="keyword">void</span> <span class="function">DrawOrigin</span>();
-
-                    };
-                </pre> <!-- CODE BLOCK ENDS HERE -->
+                    }
+                </pre>
+                <!-- CODE BLOCK ENDS HERE -->
             </div>
 
 
@@ -177,7 +161,8 @@
 
                         <span class="control">return</span> <span class="function">make_unique</span>&lt;<span class="type">Sprite</span>&gt;(<span class="keyword">new</span> <span class="type">Surface</span>(<span class="variable">info</span>-&gt;address.<span class="function">c_str</span>()), <span class="variable">info</span>-&gt;frameCount);
                     }
-                </pre> <!-- CODE BLOCK ENDS HERE -->
+                </pre>
+                <!-- CODE BLOCK ENDS HERE -->
             </div>
 
         </div>
@@ -232,7 +217,8 @@
                         std::queue&lt;<span class="type">GameObject</span>*&gt; pool;
 
                     };
-                </pre> <!-- CODE BLOCK ENDS HERE -->
+                </pre>
+                <!-- CODE BLOCK ENDS HERE -->
             </div>
 
 

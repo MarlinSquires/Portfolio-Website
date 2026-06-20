@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modular Guns</title>
+    <link rel="icon" type="image/png" href="../assets/icon.png">
 
     <!-- Required font systems for your index stylesheet rules -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,6 +18,7 @@
 </head>
 <body>
 
+
 <!-- Navigation -->
 <nav>
     <a href="../index.html">← Marlin Squires</a>
@@ -27,6 +29,7 @@
         <a href="../index.html#contact">Contact</a>
     </div>
 </nav>
+
 
 <!-- Project Canvas Area -->
 <main>
@@ -86,15 +89,16 @@
             </div>
 
             <p>
-                While working on this project I learned about custom editor scripts, which are a way
-                to control how your script is displayed on the Unity inspector. They are incredibly useful when building systems
+                While working on this project I learned about custom editor scripts, which are an easy way
+                to control how your script is displayed in the Unity inspector. They are incredibly useful when building systems
                 that designers will need to interact with, and can for example be used to show or hide
                 fields based on certain conditions, such as the value of a boolean or enum.
             </p>
 
             <div class="code-wrapper">
-                <div class="code-header">C++</div>
-                <!-- CODE BLOCK - KEEP SHITTY INDENTS -->
+                <div class="code-header">C#</div>
+
+                <!-- CODE BLOCK STARTS HERE-->
                 <pre class = code-block>
                     <span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="function">OnInspectorGUI</span>()
                     {
@@ -132,7 +136,6 @@
 
                         <span class="comment">// Apply any changes made in inspector</span>
                         serializedObject.<span class="function">ApplyModifiedProperties</span>();
-
                     }
                 </pre>
             </div>
@@ -151,6 +154,7 @@
 
     </section>
 </main>
+
 
 <!-- Footer -->
 <footer>© 2026 Marlin Squires. All rights reserved.</footer>

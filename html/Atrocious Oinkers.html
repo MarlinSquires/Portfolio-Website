@@ -1,0 +1,164 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modular Guns</title>
+    <link rel="icon" type="image/png" href="../assets/icon.png">
+
+    <!-- Required font systems for your index stylesheet rules -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+    <link href="../css/basePastel5.css" rel="stylesheet">
+    <link href="../css/projectPage.css" rel="stylesheet">
+
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <a href="../index.html">← Marlin Squires</a>
+    <div>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#contact">Contact</a>
+    </div>
+</nav>
+
+<!-- Project Canvas Area -->
+<main>
+    <div class="hero">
+        <span class="tag">C++</span>
+        <h1>Modular <span>Guns</span></h1>
+        <p>A modular weapons system built through the aggregation of scriptable objects.</p>
+    </div>
+
+    <section>
+        <!-- OVERVIEW-->
+        <div>
+            <h2>Overview</h2>
+            <p>
+                This is a modular weapons system I built for my programming class, with the intention of
+                learning some more advanced system design. Every gun holds references to scriptable
+                objects, which together define how it functions.
+            </p>
+
+            <video autoplay muted controls class = "video-container">
+                <source src="../assets/ModularGuns/weaponsShowcase.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+
+
+        </div>
+
+        <!-- SYSTEM DESCRIPTION-->
+        <div>
+            <h2>The system</h2>
+            <div class="image-container">
+                <img src="../assets/ModularGuns/UML.png" alt="UML">
+            </div>
+            <p>
+                Every gun holds 3 scriptable object references, which are the <code>ShootType</code>,
+                <code>MoveType</code>, and <code>ElementType</code>, all inheriting from
+                the <code>EffectType</code> base class. The shoot type determines a large number of variables, such as damage, spread,
+                fire rate, and number of bullets that are shot. The move type determines how those bullets move through space,
+                and the element type determines whether the bullets have a neutral, ice, or fire element.
+                <br><br>
+                There are a number of pickups that spawn in the world, and each one holds its own reference to
+                a single <code>EffectType</code>. Upon pickup, the <code>PickupHandler</code> parses the derived type
+                and injects it into the corresponding field on the currently equipped weapon.
+                <br>
+                The bullet is essentially just a wrapper around these references. The only logic it holds within itself
+                are related to despawning on collisions or lifetime end. Every time the gun fires, it calls <code>shootType.Shoot()</code>
+                and injects its own references into the bullet, which the bullet uses to determine its behaviour.
+            </p>
+        </div>
+
+        <!-- CUSTOM EDITOR SCRIPTS -->
+        <div>
+            <h2>Custom editor scripts</h2>
+
+            <div class="image-container">
+                <img src="../assets/ModularGuns/inspector.png" alt="Inspector">
+            </div>
+
+            <p>
+                While working on this project I learned about custom editor scripts, which are a way
+                to control how your script is displayed on the Unity inspector. They are incredibly useful when building systems
+                that designers will need to interact with, and can for example be used to show or hide
+                fields based on certain conditions, such as the value of a boolean or enum.
+            </p>
+
+            <div class="code-wrapper">
+                <div class="code-header">C++</div>
+
+                <!-- CODE BLOCK STARTS HERE-->
+                <pre class = code-block>
+                    <span class="keyword">public</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="function">OnInspectorGUI</span>()
+                    {
+                        serializedObject.<span class="function">Update</span>();
+
+                        <span class="type">ShootType</span> <span class="variable">instance</span> = (<span class="type">ShootType</span>)target;
+
+                        <span class="comment">// Draw all properties as normal</span>
+                        <span class="function">DrawDefaultInspector</span>();
+
+                        <span class="comment">// Display conditional properties depending on type</span>
+                        <span class="control">switch</span> (_behaviourProp.enumValueIndex)
+                        {
+                            <span class="control">case</span> (<span class="keyword">int</span>)<span class="type">ShootType::ShootBehaviour</span>.Spreadshot:
+                                <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_bulletsProp);
+                                <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_spreadOrientation);
+
+                                <span class="variable">instance</span>.maxAngle = <span class="variable">instance</span>.totalSpread / <span class="variable">instance</span>.bullets;
+
+                                <span class="comment">// Custom slider for value, necessary for taking dynamic values for range</span>
+                                _angleProp.floatValue = <span class="type">Mathf</span>.<span class="function">Clamp</span>(_angleProp.floatValue, 0f, <span class="variable">instance</span>.maxAngle);
+                                _angleProp.floatValue = <span class="type">EditorGUILayout</span>.<span class="function">Slider</span>(
+                                    <span class="string">"Angle"</span>,
+                                    _angleProp.floatValue,
+                                    0f,
+                                    <span class="variable">instance</span>.maxAngle
+                                );
+                                <span class="control">break</span>;
+
+                            <span class="control">case</span> (<span class="keyword">int</span>)<span class="type">ShootType::ShootBehaviour</span>.Grapeshot:
+                                <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_bulletsProp);
+                                <span class="type">EditorGUILayout</span>.<span class="function">PropertyField</span>(_spreadProp);
+                                <span class="control">break</span>;
+                        }
+
+                        <span class="comment">// Apply any changes made in inspector</span>
+                        serializedObject.<span class="function">ApplyModifiedProperties</span>();
+
+                    }
+                </pre>
+            </div>
+            <!-- CODE BLOCK ENDS HERE -->
+
+            <p>
+                At the core of this functionality lies Unity's built-in <code>OnInspectorGUI()</code>
+                method, which is run every time a value is changed through the inspector, and the
+                <code>PropertyField()</code> method, which displays a serialized field
+                in the inspector. Using these allows me to change which fields are displayed through the
+                use of an enum and switch statement.
+            </p>
+        </div>
+
+
+
+    </section>
+</main>
+
+<!-- Footer -->
+<footer>© 2026 Marlin Squires. All rights reserved.</footer>
+
+
+<script src="../js/dedent.js"></script>
+
+</body>
+</html>

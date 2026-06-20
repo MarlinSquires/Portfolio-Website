@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grand Escape</title>
+    <link rel="icon" type="image/png" href="../assets/icon.png">
+
+    <!-- Required font systems for your index stylesheet rules -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+    <link href="../css/basePastel5.css" rel="stylesheet">
+    <link href="../css/projectPage.css" rel="stylesheet">
+
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+    <a href="../index.html">← Marlin Squires</a>
+    <div>
+        <a href="../index.html#about">About</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#contact">Contact</a>
+    </div>
+</nav>
+
+<!-- Project Canvas Area -->
+<main>
+    <div class="hero">
+        <span class="tag">C++</span>
+        <h1>Grand <span>Escape</span></h1>
+        <p>
+            A 2D local-coop puzzle platformer.
+        </p>
+    </div>
+
+    <section>
+        <!-- OVERVIEW-->
+        <div>
+            <h2>Overview</h2>
+            <p>
+                Grand Escape is a Y2 project built alongside 5 other team members. The goal of the game
+                is to encourage communication between players through the use of gameplay mechanics
+                and level design. My primary role was to build mechanics for the players, environment, & puzzles.
+            </p>
+            <div class="image-container">
+                <img src="../assets/GrandEscape/screenshot.png" alt="Screenshot">
+            </div>
+        </div>
+
+        <!-- PLAYER BEHAVIOUR - STATE PATTERN-->
+        <div>
+            <h2>Player behaviour - state pattern</h2>
+            <p>
+                After the initial prototyping phase, I rebuilt player behaviour to utilize the state pattern.
+                I used inheritance for the various player states, with each derived class adding new behaviours.
+            </p>
+
+            <div class="image-container">
+                <img src="../assets/GrandEscape/UML.png" alt="UML Diagram">
+            </div>
+
+
+
+        </div>
+
+
+        <!-- SIGNAL INTERFACES -->
+        <div>
+
+            <h2>Signal interfaces</h2>
+
+            <p>
+                As our game progressed and we created more environmental mechanics, I found us making more and more
+                single-use classes, such as a button script whose only function was to open and close a door,
+                and then a second button script which incremented a counter, and so on.
+                To fix this issue and make our codebase cleaner and more extensible, I created the <code>ISignalSender</code>
+                and <code>ISignalReceiver</code> interfaces. Now, any two scene elements could interact with one another,
+                so long as one implemented the receiver interface, and the other implemented the sender interface.
+            </p>
+
+            <div class="code-wrapper">
+                <div class="code-header">C#</div>
+
+                <!-- CODE BLOCK STARTS HERE -->
+                <pre class = "code-block">
+
+                    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="type">ISignalSender</span>
+                    {
+                        <span class="keyword">public</span> <span class="keyword">void</span> <span class="function">SendSignal</span>(<span class="keyword">params</span> <span class="keyword">int</span>[] args);
+                    }
+
+                    <span class="keyword">public</span> <span class="keyword">interface</span> <span class="type">ISignalReceiver</span>
+                    {
+                        <span class="keyword">public</span> <span class="keyword">void</span> <span class="function">ReceiveSignal</span>(<span class="keyword">params</span> <span class="keyword">int</span>[] args);
+                    }
+                </pre>
+                <!-- CODE BLOCK ENDS HERE -->
+            </div>
+
+            <p>
+                After spending some time with this system, I found the <code>ISignalSender</code> interface to be
+                superfluous, as there was never a case where a signal receiver needed a reference to a sender, meaning
+                the abstraction the interface provided was never taken advantage of. There was also the issue that each
+                signal sender typically needed a non-insignificant amount of boilerplate written for it to function correctly.
+                In the future, I would replace the <code>ISignalSender</code> interface with a dedicated
+                <code>SignalSender</code> class that handled all the boilerplate directly. A separate class
+                could then use a reference to send signals as necessary.
+            </p>
+                <!-- CODE BLOCK ENDS HERE -->
+            </div>
+
+        </div>
+
+
+        <!-- BUTTON SCRIPT -->
+        <div>
+            <h2>Button script</h2>
+            <p>
+                To keep things performant, I opted to use an object pooling system for the two types of gameObjects
+                that would regularly be spawned in: cows and missiles. I had wrapped these gameObjects in a <code>Prefab</code> class that handled
+                the necessary <code>AddComponent()</code> calls, but this meant that every prefab had a different
+                set of arguments to be passed in its constructor. To solve this issue, I again needed to use
+                a variadic template function:
+            </p>
+
+
+            <div class="code-wrapper">
+                <div class="code-header">C++</div>
+
+                <!-- CODE BLOCK STARTS HERE -->
+                <pre class = code-block>
+
+                    <span class="keyword">class</span> <span class="type">ObjectPool</span>
+                    {
+                    <span class="keyword">public</span>:
+
+                        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="type">First</span>, <span class="keyword">typename</span>... <span class="type">Args</span>&gt;
+                        <span class="keyword">void</span> <span class="function">InstantiateToPool</span>(<span class="type">First</span> prefab, <span class="type">Scene</span>* scene, <span class="type">Args</span>... args)
+                        {
+                            <span class="control">for</span> (<span class="keyword">int</span> <span class="variable">i</span> = 0; <span class="variable">i</span> &lt; poolSize; <span class="variable">i</span>++)
+                            {
+                                <span class="keyword">auto</span> <span class="variable">go</span> = prefab.<span class="function">Load</span>(scene, std::forward&lt;<span class="type">Args</span>&gt;(args)...);
+                                <span class="variable">go</span>-&gt;<span class="function">SetActive</span>(<span class="keyword">false</span>);
+                                pool.<span class="function">push</span>(<span class="variable">go</span>);
+                            }
+                        }
+
+
+                        <span class="type">GameObject</span>* <span class="function">SpawnFromPool</span>();
+
+                        <span class="keyword">void</span> <span class="function">ReturnToPool</span>(<span class="type">GameObject</span>* go);
+
+
+                        <span class="comment">// Structors</span>
+                        <span class="function">ObjectPool</span>(<span class="keyword">int</span> poolSize) : poolSize(poolSize) {};
+
+                    <span class="keyword">private</span>:
+
+                        <span class="keyword">int</span> poolSize;
+
+                        std::queue&lt;<span class="type">GameObject</span>*&gt; pool;
+
+                    };
+                </pre>
+                <!-- CODE BLOCK ENDS HERE -->
+            </div>
+        </div>
+
+
+        <p>
+            The rest of the system followed generic pooling functionality,
+            spawning and returning objects to the pool instead of instantiating and destroying them.
+        </p>
+
+        <div class="code-wrapper">
+            <div class="code-header">C++</div>
+
+            <!-- CODE BLOCK STARTS HERE -->
+            <pre class = code-block>
+                    <span class="type">GameObject</span>* <span class="type">ObjectPool</span>::<span class="function">SpawnFromPool</span>()
+                    {
+                        <span class="control">if</span> (pool.<span class="function">empty</span>()) <span class="control">return</span> <span class="keyword">nullptr</span>;
+                        <span class="keyword">auto</span> <span class="variable">go</span> = pool.<span class="function">front</span>();
+                        pool.<span class="function">pop</span>();
+                        <span class="variable">go</span>-&gt;<span class="function">SetActive</span>(<span class="keyword">true</span>);
+                        <span class="control">return</span> <span class="variable">go</span>;
+                    }
+
+                    <span class="keyword">void</span> <span class="type">ObjectPool</span>::<span class="function">ReturnToPool</span>(<span class="type">GameObject</span>* go)
+                    {
+                        pool.<span class="function">push</span>(go);
+                        go-&gt;<span class="function">SetActive</span>(<span class="keyword">false</span>);
+                    }
+                </pre>
+            <!-- CODE BLOCK ENDS HERE -->
+        </div>
+
+        </div>
+
+    </section>
+</main>
+
+<!-- Footer -->
+<footer>© 2026 Marlin Squires. All rights reserved.</footer>
+
+
+<script src="../js/dedent.js"></script>
+
+</body>
+</html>
