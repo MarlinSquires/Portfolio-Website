@@ -46,7 +46,10 @@
             <p>
                 This is a modular weapons system I built for my programming class, with the intention of
                 learning some more advanced system design. Every gun holds references to scriptable
-                objects, which together define how it functions.
+                objects, which together define how it functions. The use of aggregation allowed me to
+                create a wide variety of weapon behaviours without undergoing a 'class explosion', avoiding
+                the need for e.g: <code>IceGrapeshotSidewind</code> or <code>FireSpreadshotDefault</code> weapon classes.
+
             </p>
 
             <video autoplay muted controls class = "video-container">
@@ -76,7 +79,7 @@
                 <br>
                 The bullet is essentially just a wrapper around these references. The only logic it holds within itself
                 are related to despawning on collisions or lifetime end. Every time the gun fires, it calls <code>shootType.Shoot()</code>
-                and injects its own references into the bullet, which the bullet uses to determine its behaviour.
+                and injects its own references into the bullet, which the bullet uses to determine its stats and behaviour.
             </p>
         </div>
 

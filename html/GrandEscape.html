@@ -109,97 +109,10 @@
                 the abstraction the interface provided was never taken advantage of. There was also the issue that each
                 signal sender typically needed a non-insignificant amount of boilerplate written for it to function correctly.
                 In the future, I would replace the <code>ISignalSender</code> interface with a dedicated
-                <code>SignalSender</code> class that handled all the boilerplate directly. A separate class
-                could then use a reference to send signals as necessary.
+                <code>SignalSender</code> class, which could then have its <code>SendSignal()</code> method called as necessary.
             </p>
                 <!-- CODE BLOCK ENDS HERE -->
             </div>
-
-        </div>
-
-
-        <!-- BUTTON SCRIPT -->
-        <div>
-            <h2>Button script</h2>
-            <p>
-                To keep things performant, I opted to use an object pooling system for the two types of gameObjects
-                that would regularly be spawned in: cows and missiles. I had wrapped these gameObjects in a <code>Prefab</code> class that handled
-                the necessary <code>AddComponent()</code> calls, but this meant that every prefab had a different
-                set of arguments to be passed in its constructor. To solve this issue, I again needed to use
-                a variadic template function:
-            </p>
-
-
-            <div class="code-wrapper">
-                <div class="code-header">C++</div>
-
-                <!-- CODE BLOCK STARTS HERE -->
-                <pre class = code-block>
-
-                    <span class="keyword">class</span> <span class="type">ObjectPool</span>
-                    {
-                    <span class="keyword">public</span>:
-
-                        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="type">First</span>, <span class="keyword">typename</span>... <span class="type">Args</span>&gt;
-                        <span class="keyword">void</span> <span class="function">InstantiateToPool</span>(<span class="type">First</span> prefab, <span class="type">Scene</span>* scene, <span class="type">Args</span>... args)
-                        {
-                            <span class="control">for</span> (<span class="keyword">int</span> <span class="variable">i</span> = 0; <span class="variable">i</span> &lt; poolSize; <span class="variable">i</span>++)
-                            {
-                                <span class="keyword">auto</span> <span class="variable">go</span> = prefab.<span class="function">Load</span>(scene, std::forward&lt;<span class="type">Args</span>&gt;(args)...);
-                                <span class="variable">go</span>-&gt;<span class="function">SetActive</span>(<span class="keyword">false</span>);
-                                pool.<span class="function">push</span>(<span class="variable">go</span>);
-                            }
-                        }
-
-
-                        <span class="type">GameObject</span>* <span class="function">SpawnFromPool</span>();
-
-                        <span class="keyword">void</span> <span class="function">ReturnToPool</span>(<span class="type">GameObject</span>* go);
-
-
-                        <span class="comment">// Structors</span>
-                        <span class="function">ObjectPool</span>(<span class="keyword">int</span> poolSize) : poolSize(poolSize) {};
-
-                    <span class="keyword">private</span>:
-
-                        <span class="keyword">int</span> poolSize;
-
-                        std::queue&lt;<span class="type">GameObject</span>*&gt; pool;
-
-                    };
-                </pre>
-                <!-- CODE BLOCK ENDS HERE -->
-            </div>
-        </div>
-
-
-        <p>
-            The rest of the system followed generic pooling functionality,
-            spawning and returning objects to the pool instead of instantiating and destroying them.
-        </p>
-
-        <div class="code-wrapper">
-            <div class="code-header">C++</div>
-
-            <!-- CODE BLOCK STARTS HERE -->
-            <pre class = code-block>
-                    <span class="type">GameObject</span>* <span class="type">ObjectPool</span>::<span class="function">SpawnFromPool</span>()
-                    {
-                        <span class="control">if</span> (pool.<span class="function">empty</span>()) <span class="control">return</span> <span class="keyword">nullptr</span>;
-                        <span class="keyword">auto</span> <span class="variable">go</span> = pool.<span class="function">front</span>();
-                        pool.<span class="function">pop</span>();
-                        <span class="variable">go</span>-&gt;<span class="function">SetActive</span>(<span class="keyword">true</span>);
-                        <span class="control">return</span> <span class="variable">go</span>;
-                    }
-
-                    <span class="keyword">void</span> <span class="type">ObjectPool</span>::<span class="function">ReturnToPool</span>(<span class="type">GameObject</span>* go)
-                    {
-                        pool.<span class="function">push</span>(go);
-                        go-&gt;<span class="function">SetActive</span>(<span class="keyword">false</span>);
-                    }
-                </pre>
-            <!-- CODE BLOCK ENDS HERE -->
-        </div>
 
         </div>
 
